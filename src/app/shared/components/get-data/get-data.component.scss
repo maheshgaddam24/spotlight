@@ -1,0 +1,398 @@
+@import "../../../utilities/global.scss";
+
+$px_5: 5px;
+$px_28: 28px;
+$px_33: 33px;
+$px_35: 35px;
+$hover_background_color: #f0f0f0;
+$active_background_color: #a6a6a6;
+
+%button_style {
+  width: fit-content;
+  height: 32px;
+  padding: 0px 20px;
+  border-radius: 20px;
+  border: 1px solid #2683C6;
+}
+
+%font_style {
+  font-family: $varela_round;
+  font-size: $font_size_16;
+  font-weight: $font_weight_400;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.container-body {
+  height: 100%;
+  gap: 24px;
+}
+
+.modal-content {
+  background: $white;
+  margin-right: 1rem;
+  position: $position_relative;
+  flex: 1 1 $flex_auto;
+  padding: var(--bs-modal-padding);
+  height: 600px;
+}
+
+.inputSchema {
+  width: 100%;
+}
+
+mat-chip {
+  margin: 1px;
+}
+
+.header {
+  padding: 1rem;
+}
+
+.schema {
+  padding: 5px;
+  max-height: 75px;
+  overflow-y: auto;
+}
+
+.buttonClose {
+  margin-top: -26px;
+  justify-content: $justify_content_flex_end;
+  display: $display_flex;
+}
+
+mat-icon {
+  cursor: pointer;
+  font-size: 13px;
+  height: 12px !important;
+  color: rgba(34, 34, 36, 0.767);
+}
+
+.select-source {
+  height: 80px;
+  gap: 8px;
+}
+
+.select-label {
+  font-family: $varela_round;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #4F4F4F;
+}
+
+input,
+.form-select {
+  width: 341px;
+  height: 46px;
+  padding: 12px 16px;
+  border-radius: 15px;
+  border: 1px solid #BDBDBD;
+}
+
+.file-import {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: $perc_100
+}
+
+.browse-file {
+  width: 343px;
+  height: 126px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 2px solid #4632DA;
+  gap: 4px
+}
+
+.upload-icon {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 28px;
+  border: 6px solid #F1F1F1;
+  background: linear-gradient(0deg, #C8C8C8, #C8C8C8),
+    linear-gradient(0deg, #F1F1F1, #F1F1F1);
+}
+
+.image {
+  width: 16.67px;
+  height: 15px;
+  position: relative;
+  top: -2px;
+  left: 1px;
+}
+
+.browse-text {
+  font-family: $inter_font;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #3D4459;
+}
+
+.text-highlight {
+  color: #4632DA;
+  cursor: pointer;
+}
+
+#browse-input {
+  display: $display_none;
+}
+
+.upload-file {
+  width: 343px;
+  height: 72px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #7F56D9;
+  display: flex;
+  gap: 8px
+}
+
+.file-icon {
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  border-radius: 28px;
+  border: 4px solid #F9F5FF;
+  background: linear-gradient(0deg, #F4EBFF, #F4EBFF),
+    linear-gradient(0deg, #F9F5FF, #F9F5FF);
+}
+
+.file-image {
+  width: 10.67px;
+  height: 13.33px;
+  position: relative;
+  top: -2px;
+  left: 1px;
+}
+
+.file-name {
+  font-family: $inter_font;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #3D4459;
+}
+
+.file-size {
+  font-family: $inter_font;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #3D4459;
+}
+
+.drag-para {
+  width: $perc_90;
+  padding-left: 3rem;
+  height: 238px;
+  text-align: $text_align_center;
+  line-height: 77px;
+  color: $black;
+  font-family: $arial_font;
+}
+
+.file-drag {
+  opacity: 0;
+}
+
+.container-form {
+  height: $perc_100;
+}
+
+.form {
+  display: $display_flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: $perc_100;
+  justify-content: space-between;
+}
+
+.form-group {
+  width: $perc_100;
+  display: grid;
+  grid-template-columns: repeat(2,
+      minmax(341px, 1fr));
+  grid-gap: 24px;
+}
+
+.form-group .control-label:after {
+  content: "*";
+  color: red;
+}
+
+label {
+  font-family: $varela_round;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+// input {
+//   height: 46px;
+//   padding: 16px;
+//   border-radius: 15px;
+//   border: 1px solid #BDBDBD;
+// }
+
+.buttons {
+  gap: 12px;
+}
+
+.testButton {
+  margin-top: 0;
+  margin-bottom: 0rem;
+}
+
+.waviy {
+  @extend %font_style;
+}
+
+.testConnection,
+.connect-data-source,
+.upload-button {
+  @extend %button_style;
+  @extend %font_style;
+  background: #2683C6;
+  color: white;
+}
+
+.reset-button,
+.cancel-button {
+  @extend %button_style;
+  @extend %font_style;
+  color: #2683C6;
+  background: white;
+}
+
+.not-allowed {
+  width: $px_90;
+  height: $px_35;
+  margin-right: $px_10;
+  margin-top: -5px;
+  color: $white;
+  background: $black;
+  border-radius: $px_5;
+  pointer-events: $pointer_events_auto !important;
+  cursor: $cursor_not_allowed !important;
+}
+
+.waviy span {
+  text-transform: uppercase;
+  animation: waviy 1s infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes waviy {
+
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow:
+      .25em 0 0 rgba(0, 0, 0, 0),
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  40% {
+    color: white;
+    text-shadow:
+      .25em 0 0 rgba(0, 0, 0, 0),
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  60% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  80%,
+  100% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 white;
+  }
+}
+
+@media screen and (max-width: 1535px) {
+  .container-body {
+    gap: 16px;
+  }
+
+  .select-source {
+    height: 65px;
+  }
+
+  input,
+  .form-select {
+    width: 275px;
+    height: 36px;
+    padding: 6px 12px;
+  }
+
+  .form-group {
+    grid-template-columns: repeat(2,
+        minmax(275px, 1fr));
+    grid-gap: 16px;
+  }
+
+  .browse-file,
+  .upload-file{
+    width: 275px !important;
+  }
+
+  .testConnection,
+  .connect-data-source,
+  .reset-button {
+    height: 36px;
+    font-size: $font_size_14;
+  }
+}
+
+@media screen and (min-width: 1729px) {
+  input,
+  .form-select {
+    width: 438px;
+  }
+
+  .form-group {
+    grid-template-columns: repeat(2,
+        minmax(438px, 1fr));
+  }
+
+  .browse-file,
+  .upload-file{
+    width: 438px !important;
+  }
+}
+
+@media screen and (min-width: 1727px) and (max-width: 1729px) {
+  input,
+  .form-select {
+    width: 393px;
+  }
+
+  .form-group {
+    grid-template-columns: repeat(2,
+        minmax(393px, 1fr));
+  }
+
+  .browse-file,
+  .upload-file{
+    width: 393px !important;
+  }
+}

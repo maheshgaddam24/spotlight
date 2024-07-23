@@ -1,0 +1,361 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class="breadcrumb-container">
+      <nav>
+        <ol class="breadcrumb d-flex m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" [href]="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li class="breadcrumb-element" aria-current="page">{{params_staging}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="dataset-container d-flex flex-column px-4">
+      <div class="datasets">{{params_staging}}</div>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <img class="info-icon" src="../../assets/images/info-green.svg" alt="info">
+          <div class="dataset-types">Import data from SQL, Oracle DBs or files</div>
+        </div>
+
+        <div *ngIf="isDatasetsPresent" data-bs-toggle="offcanvas" data-bs-target="#auditOffcanvasRight"
+          aria-controls="offcanvasRight">
+          <button class="newdataset-btn d-flex align-items-center" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <img class="add-icon" src="../../assets/images/add-icon.svg" alt="">
+            <div class="datasource-text">{{ "dataSourceDashboard.dataBase" | translate }}</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="body d-flex">
+      <div *ngIf="loading" class="data-soucres-loader">
+        <div class="loader-container d-flex flex-column gap-3">
+          <span class="loader"></span>
+          <p style="color: black;">Loading</p>
+        </div>
+      </div>
+      <div *ngIf="!loading" class="body-container">
+        <div *ngIf="isDatasetsPresent" class="data-container d-flex">
+          <div class="data-sources">
+            <div class="table-responsive d-flex flex-column justify-content-between">
+              <table class="table text-center m-0" cellpadding="6" simplebar>
+                <thead>
+                  <tr>
+                    <th class="icon"></th>
+                    <th class="source-name">{{ "dataSourceDashboard.sourceName" | translate }}</th>
+                    <th class="records-td">
+                      {{ "dataSourceDashboard.records" | translate }}
+                    </th>
+                    <th>
+                      {{ "dataSourceDashboard.status" | translate
+                      }}<i (click)="refresh()" class="bi bi-arrow-clockwise"></i>
+                    </th>
+                    <th class="time-value">
+                      UPDATED AT
+                    </th>
+                    <th class="actions-header">
+                      ACTIONS
+                    </th>
+                    <th class="expanded-view">
+
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let dataSource of pagedDataSourceList ; let i = index ">
+                    <tr class="tr" [class.active-row]="dataSource.isExpand">
+                      <td>
+                        <div class="d-flex justify-content-end">
+                          <i *ngIf="isDatabaseSource(dataSource.source_system)" style="color: #4887ec"
+                            class="bi bi-database"></i>
+                          <i *ngIf="isCsvSource(dataSource.source_system)" style="color: #32a852"
+                            class="bi bi-filetype-csv"></i>
+                          <i *ngIf="isAmazonSource(dataSource.source_system)" style="color: #32a852"
+                            class="bi bi-bucket"></i>
+                        </div>
+                      </td>
+                      <td class="data-source"
+                        [style.pointer-events]=" 
+                      dataSource.rows_committed === 0 || dataSource.status == 'Running...' || dataSource.status == 'Failed' ? 'none' : 'auto'"
+                        (click)="openBronzeTableData($event)">
+                        <p class="source-name"
+                          [matTooltip]="dataSource.datasource_name.length > 20 ? dataSource.datasource_name : null">
+                          {{ dataSource.datasource_name | uppercase }}
+                        </p>
+                      </td>
+                      <td class="records-td">
+                        <span>{{ dataSource.rows_committed }}</span>
+                      </td>
+                      <td class="status">
+                        <div [class.succ-bg]="dataSource.status == 'Success'"
+                          [class.running-bg]="dataSource.status == 'Running...'"
+                          [class.failed-bg]="dataSource.status == 'Failed'">
+                          {{ dataSource.status }}
+                        </div>
+                      </td>
+                      <td class="time-td">
+                        <span class="time-value"> {{ dataSource.updated_at ? (dataSource.updated_at |
+                          timezoneDate:'medium':'UTC' ) :
+                          "-" }} </span>
+                      </td>
+                      <td class="actions d-flex">
+                        <div (click)="showTableLogsDialog(dataSource)" matTooltip="Logs" matTooltipPosition="below">
+                          <img src="../../assets/images/logs.svg" alt="logs" class="logs-icon">
+                        </div>
+
+                        <div class="move-right" *ngIf="!(dataSource.source_system === 'FLAT FILE')">
+                          <img class="action-icon" matTooltip="Manual sync" matTooltipPosition="below"
+                            [class.rotating]="dataSource.isRotating" (click)="rotateIconAndPatch(dataSource, i)"
+                            src="../../assets/images/load-icon.svg" alt=""> <img class="action-icon" matTooltip="Edit"
+                            matTooltipPosition="below" (click)="showConfigCard(dataSource, i)"
+                            src="../../assets/images/edit-icon.svg" alt="" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        </div>
+                        <div (click)="showDeleteDataSetDialog(dataSource)" matTooltip="Delete"
+                          matTooltipPosition="below">
+                          <img style="filter: grayscale(1);" class="delete-icon" src="../../assets/images/delete.svg"
+                            alt="logs">
+                        </div>
+                      </td>
+
+                      <td (click)="dataSource.isExpand = !dataSource.isExpand" [@fadeInOut]>
+                        <img class="arrow-down" matTooltip="More info" matTooltipPosition="below"
+                          *ngIf="!dataSource.isExpand" (click)="open(dataSource.text)"
+                          src="../../assets/images/arrow-down.svg" alt="">
+                        <img class="arrow-up" *ngIf="dataSource.isExpand" src="../../assets/images/arrow-up.svg" alt="">
+                      </td>
+                    </tr>
+                    <ng-container>
+                      <tr *ngIf="dataSource.isExpand" [@fadeInOut]>
+                        <td colspan="7" class="logContent">
+                          <div class="hide-detail d-flex justify-content-between">
+                            <div class="drift_per">
+                              <p class="label m-0">Drift percentage</p>
+                              <p class="value m-0">-</p>
+                            </div>
+                            <div>
+                              <p class="label m-0">Last Run:</p>
+                              <p class="value m-0">
+                                {{ dataSource.last_run ? (dataSource.last_run | timezoneDate:'medium':'UTC' ) : "-" }}
+                              </p>
+                            </div>
+                            <div>
+                              <p class="label m-0"> {{ "dataSourceDashboard.created_at" | translate }}:</p>
+                              <p class="value m-0"> {{ dataSource.created_at ? (dataSource.created_at |
+                                timezoneDate:'medium':'UTC' )
+                                :
+                                "-"
+                                }}</p>
+                            </div>
+                            <div>
+                              <p class="label m-0">Drift Range:</p>
+                              <p class="value m-0"> {{ dataSource.drift_percent || "-" }}</p>
+                            </div>
+                            <div>
+                              <p class=" label m-0">Schedule Interval:</p>
+                              <p class="schedule align-items-center m-0">{{ dataSource.schedule_time || "-" }}</p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="!loading" class="pagination">
+              <ul>
+                <li class="page-item prev d-flex" [ngClass]="{'disabled': currentPage === 1}">
+                  <img class="arrow-left" src="../../assets/images/arrow-left.svg" alt="">
+                  <div (click)="setPage(currentPage - 1)" aria-label="Previous">
+                    PREV
+                  </div>
+                </li>
+                <li class="page-item pages-list d-flex" *ngFor="let page of pages"
+                  [ngClass]="{'active': currentPage === page}" (click)="setPage(page)">
+                  <div>{{ page }}</div>
+                </li>
+                <li class="page-item next d-flex" [ngClass]="{'disabled': currentPage === totalPages}">
+                  <div (click)="setPage(currentPage + 1)" aria-label="Next">
+                    NEXT
+                  </div>
+                  <img class="arrow-right" src="../../assets/images/arrow-right.svg" alt="">
+                </li>
+                <!-- <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}">
+                  <a class="page-link" (click)="setPage(totalPages)" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                  </a>
+                </li> -->
+              </ul>
+            </div>
+          </div>
+
+          <div class="stats row pb-1 pt-0 py-2">
+            <div class="cards-cont">
+              <div class="card">
+                <div class="card-head d-flex">
+                  <h5 class="card-title py-3 m-0 ps-3">
+                    {{ "dataSourceDashboard.connectStatus" | translate }}
+                  </h5>
+                  <p class="title mt-1 m-0 py-3">
+                    {{ "dataSourceDashboard.fiveRuns" | translate }}
+                  </p>
+                </div>
+                <div class="card-body pt-0">
+                  <div class="hideNoText" [hidden]="hideNoDataText">
+                    {{ "dataSourceDashboard.noRuns" | translate }}
+                  </div>
+                  <div *ngIf="!chartLoading" echarts [loading]="chartLoading" [options]="chartOption" class="demo-chart"
+                    [merge]="chartOption"></div>
+                </div>
+              </div>
+              <div class="card records-card d-flex flex-row">
+                <div class="card-icon"><img src="../../assets/images/report datasets & viewer.svg" alt="">
+                </div>
+                <div class="card-data d-flex flex-column">
+                  <div class="card-name">
+                    {{ "dataSourceDashboard.totalRecords" | translate }}
+                  </div>
+                  <div class="records-count">{{ recordsCount || 0 }}</div>
+                </div>
+              </div>
+              <div class="card reports-card d-flex flex-row">
+                <div class="card-icon reports-icon">
+                  <img class="image" src="../../assets/images/reports-icon.svg" alt="">
+                </div>
+                <div>
+                  <div class="card-data d-flex flex-column">
+                    <div class="card-name">
+                      <div>{{ "dataSourceDashboard.totalReports" | translate }}</div>
+                      <div class="reports-redirect" (click)="reportsPage()">
+                        <img class="vertical_arrow image" src="../../assets/images/arrow-top.svg" alt="">
+                      </div>
+                    </div>
+                    <div class="records-count">{{ reportsCount || 0 }}</div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isDatasetsPresent" class="no-datasets d-flex align-items-center justify-content-center">
+          <div class="no-data-source d-flex flex-column">
+            <img class="dataset-icon" src="../../assets/images/empty state - no workflow.svg" alt="">
+            <div class="d-flex align-items-center gap-1">
+              <img class="info-icon" src="../../assets/images/info-green.svg" alt="">
+              <div class="datasets">{{ "dataSourceDashboard.noDataSources" | translate }}</div>
+            </div>
+          </div>
+          <div>
+            <button class="add-datasource" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+              data-bs-toggle="offcanvas" data-bs-target="#auditOffcanvasRight" aria-controls="offcanvasRight">
+              Add data source
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="auditOffcanvasRight"
+    aria-labelledby="offcanvasRightLabel" #auditOffcanvas>
+    <div class="d-flex flex-column">
+      <div class="text-end d-flex justify-content-end" (click)="resetStepper()">
+        <button type="button" #closeButton class="btn-close text-reset" data-bs-dismiss="offcanvas"
+          aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-header">
+        Add data source
+      </div>
+    </div>
+    <div class="offcanvas-body ">
+      <mat-stepper #stepper>
+        <mat-step [editable]="!(isStep1Successful || isStep2Successful)">
+          <ng-template matStepLabel [class.active]="!(isStep1Successful || isStep2Successful)"> {{ "getData.header" |
+            translate }}</ng-template>
+          <app-get-data class="mat-horizontal-content-container" *ngIf="getDataSourceStepper"
+            (connectClicked)="onConnectClicked()" (flatFileRowFilter)="flatFileRowFilter()"
+            (tableListData)="tableListData($event)" [data]="selectedProjectId"
+            (dataToEmit)="receiveDataFromChild($event)" (rowColumFilteredData)="dataPathSource($event)"
+            (resetDataBase)="resetDataBase()" (resetUpload)="cancelGetUpload()"></app-get-data>
+        </mat-step>
+        <mat-step [editable]="!isStep2Successful" *ngIf="isStep1Successful">
+          <ng-template matStepLabel [class.active]="isStep1Successful">Confirm table details</ng-template>
+          <app-get-database-tables class="mat-horizontal-content-container" *ngIf="getDataTablesStepper"
+            (rowColumFilteredData)="rowColumFilteredData($event)" [data]="dataBaseTablesList"
+            (cancelGetDatabaseSelect)="cancelGetDatabase()"></app-get-database-tables>
+        </mat-step>
+        <mat-step *ngIf="isStep2Successful">
+          <ng-template matStepLabel [class.active]="isStep2Successful">Filter columns and rows</ng-template>
+          <app-row-column-filtering class="mat-horizontal-content-container" *ngIf="getRowColumnFilterStepper"
+            [data]="rowColumFilteredTableList" [isGetDatabaseTablesComponent]="pathDataSource"
+            (triggerResetMethod)="resetStepper()" (cancelRowFilterTab)="cancelRowColumnFilter()"
+            (triggerRowColumnFilterMethod)="resetRowColumnFilter()"></app-row-column-filtering>
+        </mat-step>
+      </mat-stepper>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end offcanvasScheduling" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="close-canvas">
+      <div class="close">
+        <i class="bi bi-x close-button" #closeButtonScheduling data-bs-dismiss="offcanvas" aria-label="Close"></i>
+      </div>
+    </div>
+    <div class="canvas-body">
+      <div class="card">
+        <div class="card-head d-flex">
+          <h5 class="card-title py-3 m-0 ps-3">
+            {{ dataSource_name }}
+          </h5>
+        </div>
+        <div class="card-body" style="height: fit-content; overflow: auto;">
+          <form>
+            <div class="mb-3">
+              <label for="loadType" class="form-label">Load Type</label>
+              <select class="form-select" id="loadType" (change)="onLoadSelect($event)" [(ngModel)]="selectedLoadType"
+                name="loadType">
+                <option value="full">Full Load</option>
+                <option value="incremental">Incremental Load</option>
+              </select>
+            </div>
+            <div class="mb-3" *ngIf="selectedLoadType === 'incremental'">
+              <label for="primaryKey" class="form-label">Primary Key</label>
+              <select class="form-select" id="primaryKey" [(ngModel)]="selectedPrimaryKey" name="primaryKey">
+                <option *ngFor="let key of bronzeLayerTableColumns" [value]="key">{{ key }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="syncType" class="form-label">Synchronization Type</label>
+              <select class="form-select" id="syncType" [(ngModel)]="selectedSyncType" name="syncType">
+                <option value="manual">Manual Sync</option>
+                <option value="automatic">Automatic Sync</option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="canvas-buttons">
+      <div class="buttons">
+        <button type="submit" data-bs-dismiss="offcanvas" aria-label="Close" class="clear-button">
+          {{"Cancel" | translate}}
+        </button>
+        <div class="d-flex">
+
+          <button type="submit" [disabled]="disableButton()" (click)="submitForm()" class="create-button">
+            {{"saveButton" | translate}}
+          </button>
+        </div>
+      </div>

@@ -1,0 +1,975 @@
+<div class="container-fluid p-0">
+    <div class="line"></div>
+    <div>
+        <div class="breadcrumb-container">
+            <div class="d-flex justify-content-between">
+                <nav>
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-element">
+                            <a [href]="routeHome()">
+                                <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+                            </a>
+                        </li>
+
+                        <li class="breadcrumb-element" aria-current="page"> <a class="routeData"
+                                [href]="routeDataPipelines()">
+                                {{projectName | titlecase }}</a></li>
+                        <li *ngIf="highlightRoute.route" class="breadcrumb-element" aria-current="page"> <a
+                                class="routeData" (click)="routeWorkflow(highlightRoute.title)">
+                                {{ highlightRoute.title}}</a></li>
+                        <li *ngIf="activeQueryEdit === 'edit'" class="breadcrumb-element" aria-current="page"> <a
+                                class="routeData" (click)="rulesDataViewRoute()">
+                                {{ rulesDataView()}}</a></li>
+                        <li class="breadcrumb-element" aria-current="page">{{layerName}}</li>
+                    </ol>
+                </nav>
+                <div *ngIf="!hideQueryBuilder">
+                    <button class="mx-2 create-button d-flex align-items-center"
+                        (click)="triggerQueryMethod()"><mat-icon class="save-icon">save</mat-icon>{{querySaveBtn}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="loading" class="spinner-container d-flex justify-content-center align-items-center">
+        </div>
+        <div *ngIf="filteredBronzeLayerTables.length == 0"
+            class="no-datasets d-flex align-items-center justify-content-center">
+            <div class="no-data-source d-flex flex-column">
+                <img class="dataset-icon" src="../../assets/images/empty state - no workflow.svg" alt="">
+                <div class="d-flex align-items-center gap-1">
+                    <img class="info-icon" src="../../assets/images/info-green.svg" alt="">
+                    <div class="datasets">No data source found</div>
+                </div>
+            </div>
+            <div>
+                <button class="add-datasource" type="button" (click)="getDataSources()">
+                    Add data source
+                </button>
+            </div>
+        </div> -->
+        <div class="query-builder-container d-flex p-3 gap-3">
+            <div class="side-container d-flex flex-column gap-2">
+                <div class="tablelist d-flex flex-column gap-2" [class.full-height]="hideQueryBuilder">
+                    <div class="search d-flex align-items-center justify-content-center" action="">
+                        <input type="text" [(ngModel)]="tableSearch" placeholder="Search table name"
+                            (keyup)="filterTables();">
+                    </div>
+                    <div class="multi-select" [class.full-height]="hideQueryBuilder">
+                        <div *ngFor="let table of filteredBronzeLayerTables" class="table-check d-flex">
+                            <label class="d-flex align-items-center">
+                                <input class="checkbox" type="checkbox" data-toggle="toggle"
+                                    (change)="onBronzeTableSelect($event)" [value]="table"
+                                    [disabled]="isCheckboxDisabled" [checked]="isChecked(table)" />
+                                <div class="tableName">{{ table }}</div>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="result-data d-flex flex-column gap-3" *ngIf="!hideQueryBuilder">
+                    <div class="resultant-summary">Resultant Summary</div>
+                    <div class="data-container d-flex flex-column gap-2">
+                        <div class="error-records d-flex justify-content-between">
+                            <div>Error Queue Records</div>
+                            <div class="error-count">{{error_queue_count || '-'}}</div>
+                        </div>
+                        <div class="result-records d-flex justify-content-between">
+                            <div>Resultant Records</div>
+                            <div class="result-count">{{resultant_records_count || '-' }}</div>
+                        </div>
+                        <div class="total-records d-flex justify-content-between">
+                            <div>Total Records</div>
+                            <div class="total-count">{{total_records_count || '-'}}</div>
+                        </div>
+                        <div class="run-time d-flex align-items-center justify-content-end gap-1">
+                            <div>Run Time:</div>
+                            <div class="time-taken">{{this.runTime || '-'}}</div>
+                        </div>
+                    </div>
+                    <div class="filter-data d-flex flex-column gap-3" *ngIf="silverLayerTablePreviewData">
+                        <div class="filter-by">Filter by</div>
+                        <div class="filter-radio d-flex justify-content-between">
+                            <label class="radio-label">
+                                <input class="radio-button" type="radio" [(ngModel)]="selectedFilter" value="correct"
+                                    (ngModelChange)="onFilterChange($event)" checked
+                                    [disabled]="silverLayerTablePreviewData == ''">
+                                <div>Resultant Records</div>
+                            </label>
+                            <label class="radio-label">
+                                <input class="radio-button" type="radio" [(ngModel)]="selectedFilter" value="error"
+                                    (ngModelChange)="onFilterChange($event)" [disabled]="isErrorQueueDisabled">
+                                <div>Error Queue Records</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="loading" class="spinner-container d-flex justify-content-center align-items-center">
+                <span class="query-loader"></span>
+            </div>
+
+            <div class="query-preview d-flex flex-column" *ngIf="!loading">
+                <div [hidden]="hideTextDiv" class="textDiv">
+                    <h1>{{"query-builder.select_table" | translate}}</h1>
+                </div>
+                <div class="d-flex">
+                    <div class="transparent-card" *ngIf="resultantInfoText()">
+                        <span>Only 200 rows of the {{textDataLabel()}} are displayed.</span>
+                    </div>
+                    <div class="query-column" [hidden]="!hideTextDiv">
+                        <!-- <button class="query-options d-flex" mat-button [matMenuTriggerFor]="queryMenuOptions"> Build
+                        Query
+                        <img src="../../assets/images/arrow-down.svg" alt="">
+                    </button> -->
+                        <button class="query-options d-flex" mat-button [matMenuTriggerFor]="queryMenuOptions"> Build
+                            Query
+                            <img src="../../assets/images/arrow-down.svg" alt="">
+                        </button>
+                        <mat-menu #queryMenuOptions="matMenu">
+                            <button id="offCanvasButton" class="menu-button" mat-menu-item
+                                *ngFor="let query of queryOptions" value="" data-bs-toggle="offcanvas"
+                                data-bs-target="#auditOffcanvasRight" aria-controls="offcanvasRight"
+                                (click)="openQueryBuilder(query)"
+                                [ngClass]="{'conditional-background': shouldChangeBackground(query)}"
+                                [hidden]="hideJoin(query)">
+                                {{query}}
+                            </button>
+                        </mat-menu>
+                        <button class="column-selection d-flex" mat-button [matMenuTriggerFor]="columnMenuOptions">
+                            Filter
+                            Columns
+                            <img src="../../assets/images/arrow-down.svg" alt="">
+                        </button>
+                        <mat-menu class="filter-columns" #columnMenuOptions="matMenu"
+                            (click)="$event.stopPropagation();">
+                            <div class="accordion" id="accordionExample" (click)="$event.stopPropagation();">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="accordion-item" *ngFor="let table of checkedTableNames">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed d-flex justify-content-between"
+                                                type="button" data-bs-toggle="collapse"
+                                                [attr.data-bs-target]="'#'+table" aria-expanded="false"
+                                                [attr.aria-controls]="table" (click)="displayColumnData(table)">
+                                                {{table}}
+                                            </button>
+                                        </h2>
+                                        <div [attr.id]="table" class="accordion-collapse collapse"
+                                            data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <ng-multiselect-dropdown class="multi-select" [placeholder]="'Columns'"
+                                                    [settings]="dropdownSettings" [data]="columnsData"
+                                                    [(ngModel)]="selectedTableColumns[table]"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                </ng-multiselect-dropdown>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end form-group">
+                                <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                    (click)="executeFilterColumns()">
+                                    {{ "executeButton" | translate }}
+                                </button>
+                            </div>
+                        </mat-menu>
+                    </div>
+                </div>
+
+                <div class="queryData" [hidden]="!hideTextDiv">
+
+                    <app-query-builder-data-preview *ngIf="silverLayerTablePreviewData" #dataPreview
+                        [data]="silverLayerTablePreviewData" [error_queue]="this.error_queue_data" [schemaColumnsData]="this.schemaColumnData"
+                        [sourceTableNames]="this.selectedTableNames" [traceabilityInfo]="this.traceabilityInfo"
+                        [groupByColumns]="this.groupByColumns" [creatingGoldLayerTable]="this.creatingGoldLayerTable"
+                        [runTime]="this.runTime" (itemDropped)="previewSQLQueryData()"
+                        (discardClick)="previewSQLQueryData()"
+                        [editScheduledFrequency]="this.editScheduledFrequency"></app-query-builder-data-preview>
+                    <div class="error-card" *ngIf="errorContainer">
+                        <div class="error-icon">
+                            <i class="fa fa-exclamation-circle"></i>
+                        </div>
+                        <div class="error-message d-flex flex-column">
+                            {{ errorData }}
+                            <button class="btn btn-dark" (click)="discardChecks()">Discard all checks (or)
+                                Re-run
+                                query</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="auditOffcanvasRight"
+                aria-labelledby="offcanvasRightLabel" #auditOffcanvas>
+                <div class="d-flex flex-column">
+                    <div class="text-end d-flex justify-content-end">
+                        <button type="button" #closeButton class="btn-close text-reset p-3" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-header">
+                        {{selectedQueryOption}}
+                    </div>
+                </div>
+                <div class="offcanvas-body ">
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Aggregate'">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr class="text-center"
+                                        *ngFor="let dynamic of dynamicAggregateArray; let i = index">
+                                        <td>
+                                            <select class="form-select fields" id="column"
+                                                [(ngModel)]="dynamicAggregateArray[i].agg_col" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.Columns" | translate }}
+                                                </option>
+                                                <option *ngFor="let col of selectedTablesFields" [value]="col">
+                                                    {{ col }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" id="condition"
+                                                [(ngModel)]="dynamicAggregateArray[i].agg_function" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.operation" | translate }}
+                                                </option>
+                                                <option *ngFor="let aggFun of aggregateFunctions" [value]="aggFun">
+                                                    {{ aggFun }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td (click)="deleteAggregate(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addAggregate()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeAggregate()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Case Statement'" id="case">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <div class="case-query" *ngFor="let dynamic of dynamicCaseQueryArray;let i = index">
+                                <table class="table">
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let dynamic of dynamicCaseQueryArray[i].case_conditions;let j = index">
+                                            <td class="d-flex flex-column gap-1">
+                                                <p class="m-0">
+                                                    {{ "query-builder.tab-case.when" | translate }}
+                                                </p>
+                                                <select class="form-select case-fields" id="column"
+                                                    [(ngModel)]="dynamicCaseQueryArray[i].case_conditions[j].case_field"
+                                                    required>
+                                                    <option value="" disabled selected hidden>
+                                                        {{ "query-builder.Columns" | translate }}
+                                                    </option>
+                                                    <option *ngFor="let col of selectedTablesFields" [value]="col">
+                                                        {{ col }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select operator mt-4" id="operator"
+                                                    [(ngModel)]="dynamicCaseQueryArray[i].case_conditions[j].case_operator"
+                                                    required>
+                                                    <option value="" disabled selected hidden>
+                                                        Operator
+                                                    </option>
+                                                    <option *ngFor="let case_operator of caseConditions"
+                                                        [value]="case_operator">
+                                                        {{ case_operator }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+
+                                                <div class="ng-autocomplete dropdown-value  mt-4">
+                                                    <ng-autocomplete
+                                                        [(ngModel)]="dynamicCaseQueryArray[i].case_conditions[j].case_value"
+                                                        placeholder="Value" [data]="columnsOfSelectedTables"
+                                                        [itemTemplate]="itemTemplate">
+                                                    </ng-autocomplete>
+
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item"></a>
+                                                    </ng-template>
+
+                                                </div>
+                                            </td>
+                                            <td class="d-flex flex-column gap-1">
+                                                <p class="m-0">
+                                                    {{ "query-builder.tab-case.then" | translate }}
+                                                </p>
+                                                <div class="ng-autocomplete dropdown-value">
+                                                    <ng-autocomplete
+                                                        [(ngModel)]="dynamicCaseQueryArray[i].case_conditions[j].then_con"
+                                                        placeholder="Value" [data]="columnsOfSelectedTables"
+                                                        [itemTemplate]="itemTemplate">
+                                                    </ng-autocomplete>
+
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item"></a>
+                                                    </ng-template>
+
+                                                </div>
+                                                <!-- <input placeholder="value" class="form-control" id="then_con"
+                                                    [(ngModel)]="dynamicCaseQueryArray[i].then_con" type="search" /> -->
+                                            </td>
+                                            <td (click)="deleteCase(i,j)">
+                                                <i class="fa fa-trash icon mt-4"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-end">
+                                    <div (click)="addCase(i)" class="add-query d-flex gap-1">
+                                        <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                        <div class="query-text">Case</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <div class="d-flex flex-column gap-1" style="width: 50%">
+                                        <p class="m-0 text-start">
+                                            {{ "query-builder.tab-case.else" | translate }}
+                                        </p>
+                                        <div class="form-group input-group-lg">
+                                            <ng-autocomplete [(ngModel)]="dynamicCaseQueryArray[i].else_con"
+                                                placeholder="Else Condition" [data]="columnsOfSelectedTables"
+                                                [itemTemplate]="itemTemplate">
+                                            </ng-autocomplete>
+
+                                            <ng-template #itemTemplate let-item>
+                                                <a [innerHTML]="item"></a>
+                                            </ng-template>
+
+                                        </div>
+                                        <!-- <div class="form-group input-group-lg">
+                                            <input placeholder="Else Condition" class="form-control input-field"
+                                                id="else_con" name="else_con" [(ngModel)]="else_con" type="text" />
+                                        </div> -->
+                                    </div>
+                                    <div class="d-flex flex-column gap-1">
+                                        <p class="m-0 text-start">
+                                            {{ "query-builder.tab-case.end-as" | translate }}
+                                        </p>
+                                        <div class="form-group input-group-lg">
+                                            <input placeholder="End as Condition" class="form-control input-field"
+                                                id="end_as_con" name="end_as_con"
+                                                [(ngModel)]="dynamicCaseQueryArray[i].end_as_con" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div (click)="deleteCaseQuery(i)" class="del-query-text">- Query</div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addCaseQuery()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeCase()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Group By'" id="groupBy">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr class="text-center" *ngFor="let dynamic of dynamicGroupByArray; let i = index">
+                                        <td>
+                                            <select class="form-select fields" id="column"
+                                                [(ngModel)]="dynamicGroupByArray[i].groupby_col" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.Columns" | translate }}
+                                                </option>
+                                                <option *ngFor="let col of selectedTablesFields" [value]="col">
+                                                    {{ col }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td (click)="deleteGroupCol(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addGroupCol()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeGroupCol()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Having'" id="having">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr *ngFor="let dynamic of dynamicHavingArray; let i = index">
+                                        <td>
+                                            <select class="form-select having-fields" id="column"
+                                                [(ngModel)]="dynamicHavingArray[i].field" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.Columns" | translate }}
+                                                </option>
+                                                <option *ngFor="let col of havingColumns" [value]="col">
+                                                    {{ col }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" id="operator"
+                                                [(ngModel)]="dynamicHavingArray[i].operator" required>
+                                                <option value="" disabled selected hidden>Operator</option>
+                                                <option *ngFor="let operator of conditions" [value]="operator">
+                                                    {{ operator }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="ng-autocomplete dropdown-value">
+                                                <ng-autocomplete [(ngModel)]="dynamicHavingArray[i].value"
+                                                    placeholder="Value" [data]="columnsOfSelectedTables"
+                                                    [itemTemplate]="itemTemplate">
+                                                </ng-autocomplete>
+
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item"></a>
+                                                </ng-template>
+
+                                            </div>
+                                            <!-- <input placeholder="value" [(ngModel)]="dynamicHavingArray[i].value"
+                                                class="form-control" type="text" /> -->
+                                        </td>
+                                        <td class="condition mt-2">
+                                            <input type="radio" name="{{ i }}-AND"
+                                                [(ngModel)]="dynamicHavingArray[i].condition" value="AND" />
+                                            <label class="m-1" for="AND">{{
+                                                "query-builder.AND" | translate
+                                                }}</label>
+                                            <input type="radio" name="{{ i }}-OR"
+                                                [(ngModel)]="dynamicHavingArray[i].condition" value="OR" />
+                                            <label class="m-1" for="OR">{{
+                                                "query-builder.OR" | translate
+                                                }}</label>
+                                        </td>
+                                        <td (click)="deleteHavingRow(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addHavingRow()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeHavingCondition()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Order By'" id="orderBy">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr class="text-center" *ngFor="let dynamic of dynamicOrderByArray; let i = index">
+                                        <td>
+                                            <select class="form-select fields" id="column"
+                                                [(ngModel)]="dynamicOrderByArray[i].orderby_col" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.Columns" | translate }}
+                                                </option>
+                                                <option *ngFor="let col of selectedTablesFields" [value]="col">
+                                                    {{ col }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" id="condition"
+                                                [(ngModel)]="dynamicOrderByArray[i].orderby_operator" required>
+                                                <option value="" disabled selected hidden>
+                                                    ASC
+                                                </option>
+                                                <option *ngFor="let orderby_operator of orderOperations"
+                                                    [value]="orderby_operator">
+                                                    {{ orderby_operator }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td (click)="deleteOrder(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addOrder()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeOrder()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Filter'" id="filter">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr *ngFor="let dynamic of dynamicQueryArray; let i = index">
+                                        <td>
+                                            <select class="form-select filter-fields" id="column"
+                                                [(ngModel)]="dynamicQueryArray[i].field" required>
+                                                <option value="" disabled selected hidden>
+                                                    {{ "query-builder.Columns" | translate }}
+                                                </option>
+                                                <option *ngFor="let col of selectedTablesFields" [value]="col">
+                                                    {{ col }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select operator" id="operator"
+                                                [(ngModel)]="dynamicQueryArray[i].operator" required>
+                                                <option value="" disabled selected hidden>Operator</option>
+                                                <option *ngFor="let operator of conditions" [value]="operator">
+                                                    {{ operator }}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="ng-autocomplete dropdown-value">
+                                                <ng-autocomplete [(ngModel)]="dynamicQueryArray[i].value"
+                                                    placeholder="Value" [data]="columnsOfSelectedTables"
+                                                    [itemTemplate]="itemTemplate">
+                                                </ng-autocomplete>
+
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item"></a>
+                                                </ng-template>
+
+                                            </div>
+                                            <!-- <input placeholder="value" [(ngModel)]="dynamicQueryArray[i].value"
+                                                class="form-control" type="text" /> -->
+                                        </td>
+                                        <td class="condition mt-2">
+                                            <input type="radio" name="{{ i }}-AND"
+                                                [(ngModel)]="dynamicQueryArray[i].condition" value="AND" />
+                                            <label class="m-1" for="AND">{{
+                                                "query-builder.AND" | translate
+                                                }}</label>
+                                            <input type="radio" name="{{ i }}-OR"
+                                                [(ngModel)]="dynamicQueryArray[i].condition" value="OR" />
+                                            <label class="m-1" for="OR">{{
+                                                "query-builder.OR" | translate
+                                                }}</label>
+                                        </td>
+                                        <td (click)="deleteFilterRow(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addFilterRow()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end form-group">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeFilterCondition()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Derived Columns'" id="derivedCol">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <tr *ngFor="let dynamic of dynamicDerivedColArray; let i = index"
+                                        class="text-center">
+                                        <td>
+                                            <input placeholder="Value" [(ngModel)]="dynamicDerivedColArray[i].operation"
+                                                class="form-control" type="text" />
+                                        </td>
+                                        <td>
+                                            <div class="mt-2">as</div>
+                                        </td>
+                                        <td>
+                                            <input placeholder="Value"
+                                                [(ngModel)]="dynamicDerivedColArray[i].derived_col" class="form-control"
+                                                type="text" />
+                                        </td>
+                                        <td (click)="deleteDerivedCol(i)">
+                                            <i class="fa fa-trash icon"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addDerivedCol()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeDerivedCol()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Custom Query'" id="customQuery">
+                        <div class="edit-query">
+                            <div class="custom-query" #editor></div>
+                            <div class="copy-icon d-flex ">
+                                <mat-icon style="justify-content: center; display: flex; cursor: pointer;margin: 8px;"
+                                    (click)="copyToClipboard()">{{copyIcon}}
+                                </mat-icon>
+                            </div>
+                        </div>
+                        <div class="execute text-end">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeCustomQuery()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-container" *ngIf="selectedQueryOption === 'Joins'" [hidden]="hideJoinsTab"
+                        id="joins ">
+                        <div class="query-group d-flex flex-column gap-2">
+                            <table class="table">
+                                <tbody>
+                                    <ng-container *ngFor="let dynamic of dynamicJoinsArray; let i=index">
+                                        <tr>
+                                            <td>
+                                                <select class="form-select" id="condition"
+                                                    [(ngModel)]="dynamicJoinsArray[i].join_con" required>
+                                                    <option value="" disabled selected hidden>
+                                                        Join
+                                                    </option>
+                                                    <option *ngFor="let join_con of joinConditions" [value]="join_con">
+                                                        {{ join_con }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select join-fields" id="{{ i }}-firstTable"
+                                                    (change)="onSelectTableName(i,$event,'firstTable')"
+                                                    [(ngModel)]="dynamicJoinsArray[i].firstTable" required>
+                                                    <option value="" disabled selected hidden>
+                                                        Tables
+                                                    </option>
+                                                    <option *ngFor="let table of checkedTableNames" [value]="table">
+                                                        {{ table }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select join-fields" id="{{ i }}-firstAttribute"
+                                                    [(ngModel)]="dynamicJoinsArray[i].firstAttribute" required>
+                                                    <option value="" disabled selected hidden>
+                                                        {{ "query-builder.Columns" | translate }}
+                                                    </option>
+                                                    <option
+                                                        *ngFor="let col of dynamicSelectedAttributes[i]['firstTable']"
+                                                        [value]="col">
+                                                        {{ col }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select join-fields" id="{{ i }}-secTable"
+                                                    (change)="onSelectTableName(i,$event,'secTable')"
+                                                    [(ngModel)]="dynamicJoinsArray[i].secTable" required>
+                                                    <option value="" disabled selected hidden>
+                                                        Tables
+                                                    </option>
+                                                    <option *ngFor="let table of checkedTableNames" [value]="table">
+                                                        {{ table }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select join-fields" id="{{ i }}-secAttribute"
+                                                    [(ngModel)]="dynamicJoinsArray[i].secAttribute" required>
+                                                    <option value="" disabled selected hidden>
+                                                        {{ "query-builder.Columns" | translate }}
+                                                    </option>
+                                                    <option *ngFor="let col of dynamicSelectedAttributes[i]['secTable']"
+                                                        [value]="col">
+                                                        {{ col }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td (click)="deleteJoin(i)">
+                                                <i class="fa fa-trash icon"></i>
+                                            </td>
+                                        </tr>
+                                        <ng-container>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div (click)="addCon(i)" class="add-query d-flex gap-1">
+                                                            <img class="add-icon"
+                                                                src="../../assets/images/add-icon-blue.svg" alt="">
+                                                            <div class="query-text">Condition</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                        <ng-container *ngIf=" dynamicJoinsArray[i].conditions.length> 0">
+                                            <tr class="bg-white"
+                                                *ngFor="let con of dynamicJoinsArray[i].conditions; let j = index">
+                                                <td class="operators mt-2">
+                                                    <input type="radio" name="{{i}}-{{j}}-AND"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].operator"
+                                                        value="AND" />
+                                                    <label for="AND">AND</label>
+                                                    <input type="radio" name="{{i}}-{{j}}-OR"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].operator"
+                                                        value="OR" />
+                                                    <label for="OR">OR</label>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select join-fields" id="{{ j }}-firstTable"
+                                                        (change)="onSelectTable(j,$event,'firstTable')"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].firstTable"
+                                                        required>
+                                                        <option value="" disabled selected hidden>
+                                                            Tables
+                                                        </option>
+                                                        <option *ngFor="let table of checkedTableNames" [value]="table">
+                                                            {{ table }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select join-fields" id="{{ j }}-firstAttribute"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].firstAttribute"
+                                                        required>
+                                                        <option value="" disabled selected hidden>
+                                                            {{ "query-builder.Columns" | translate }}
+                                                        </option>
+                                                        <option
+                                                            *ngFor="let col of dynamicSelectedAttributes[i]['firstTable']"
+                                                            [value]="col">
+                                                            {{ col }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select join-fields" id="{{ j }}-secTable"
+                                                        (change)="onSelectTable(j,$event,'secTable')"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].secTable"
+                                                        required>
+                                                        <option value="" disabled selected hidden>
+                                                            Tables
+                                                        </option>
+                                                        <option *ngFor="let table of checkedTableNames" [value]="table">
+                                                            {{ table }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select join-fields" id="{{ j }}-secAttribute"
+                                                        [(ngModel)]="dynamicJoinsArray[i].conditions[j].secAttribute"
+                                                        required>
+                                                        <option value="" disabled selected hidden>
+                                                            {{ "query-builder.Columns" | translate }}
+                                                        </option>
+                                                        <option
+                                                            *ngFor="let col of dynamicSelectedAttributes[i]['secTable']"
+                                                            [value]="col">
+                                                            {{ col }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td (click)="deleteCondition(i,j)">
+                                                    <i class="fa fa-trash icon"></i>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                                <div (click)="addJoin()" class="add-query d-flex gap-1">
+                                    <img class="add-icon" src="../../assets/images/add-icon-blue.svg" alt="">
+                                    <div class="query-text">Query</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button class="execute-button" type="submit" data-bs-dismiss="offcanvas"
+                                (click)="executeJoin()">
+                                {{ "executeButton" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div [hidden]="hideQueryBuilder" class="bottom-container mb-1">
+                <div class="query-preview-container">
+                    <as-split unit="percent" [restrictMove]="restrictMove" direction="horizontal" [gutterSize]="10"
+                        class="splitArea" (dragEnd)="dragEnd($event)" [gutterDblClickDuration]="1000"
+                        (gutterDblClick)="fullSplit($event)">
+                        <as-split-area [size]="leftAreaSize" [minSize]="3" [maxSize]="80">
+                            <div class="queries" [ngClass]="{ 'word-wrap': leftAreaSize < 50 }">
+                                <div style="cursor: pointer;" (click)="fullSplit($event)" class="bottom-label">
+                                    <mat-icon class="queryIcon">data_object</mat-icon>
+                                    Query
+                                </div>
+                                <div class="generatedQuery">
+                                    <div *ngIf="leftAreaSize > 6" class="d-flex px-3 py-3 pb-0">
+                                        <p class="px-2"><b>{{"query-builder.select" | translate}}</b></p>
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="d-flex">
+                                                <div class="accordion-item" *ngFor="let table of checkedTableNames">
+                                                    <h2 class="accordion-header">
+                                                        <button
+                                                            class="accordion-button collapsed d-flex justify-content-between"
+                                                            type="button" data-bs-toggle="collapse"
+                                                            [attr.data-bs-target]="'#'+table" aria-expanded="false"
+                                                            [attr.aria-controls]="table"
+                                                            (click)="displayColumnData(table)">
+                                                            {{table}}
+                                                        </button>
+                                                    </h2>
+                                                    <div [attr.id]="table" class="accordion-collapse collapse"
+                                                        data-bs-parent="#accordionExample">
+                                                        <div class="accordion-body">
+                                                            <ng-multiselect-dropdown (onSelect)="onColumnSelect($event)"
+                                                                (onDeSelect)="onColumnDeSelect($event)"
+                                                                class="multi-select" [placeholder]="'Columns'"
+                                                                [settings]="dropdownSettings" [data]="columnsData"
+                                                                [(ngModel)]="selectedTableColumns[table]"
+                                                                [ngModelOptions]="{standalone: true}">
+                                                            </ng-multiselect-dropdown>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="leftAreaSize > 6" class="px-3 py-1" class="queryDisplay">
+                                        <div *ngIf="aggregateQuery">
+                                            <p class="px-4 mb-1" (click)="activeTab = 'aggregate'"
+                                                [innerHTML]="aggregateQuery">
+                                            </p>
+                                        </div>
+                                        <div *ngIf="caseStatementQuery">
+                                            <p class="px-4 mb-1" (click)="activeTab = 'case'"
+                                                [innerHTML]="caseStatementQuery">
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex px-3" *ngIf="!joinsQuery">
+                                        <p *ngIf="leftAreaSize > 6" class="px-2 mb-1"><b>{{"query-builder.from" |
+                                                translate}}</b> {{
+                                            dynamicJoinsArray[0].firstTable!=''?dynamicJoinsArray[0].firstTable:checkedTableNames[0]
+                                            }}</p>
+
+                                    </div>
+                                    <div *ngIf="leftAreaSize > 6" class="px-3 py-1" class="queryDisply">
+                                        <div *ngIf="joinsQuery">
+                                            <p class="mb-1 px-4" (click)="activeTab = 'joins'" [innerHTML]="joinsQuery">
+                                            </p>
+                                        </div>
+                                        <div *ngIf="filterQuery">
+                                            <p class="mb-1 px-4" (click)="activeTab = 'filter'"
+                                                [innerHTML]="filterQuery">
+                                            </p>
+                                        </div>
+                                        <div *ngIf="groupByQuery">
+                                            <p class="mb-1 px-4" (click)="activeTab = 'groupBy'"
+                                                [innerHTML]="groupByQuery">
+                                            </p>
+                                        </div>
+                                        <div *ngIf="orderByQuery">
+                                            <p class="mb-1 px-4" (click)="activeTab = 'orderBy'"
+                                                [innerHTML]="orderByQuery">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </as-split-area>
+                        <as-split-area [size]="100 - leftAreaSize">
+                            <div class="queryData" *ngIf="silverLayerTablePreviewData">
+                                <app-query-builder-data-preview [data]="silverLayerTablePreviewData"
+                                    [error_queue]="this.error_queue_data" [sourceTableNames]="this.selectedTableNames"
+                                    [traceabilityInfo]="this.traceabilityInfo" [groupByColumns]="this.groupByColumns"
+                                    [creatingGoldLayerTable]="this.creatingGoldLayerTable" [runTime]="this.runTime"
+                                    (itemDropped)="previewSQLQueryData()"
+                                    (discardClick)="previewSQLQueryData()"></app-query-builder-data-preview>
+                            </div>
+                            <div *ngIf="loading" class="spinner-container">
+                                <span class="loader"></span>
+                            </div>
+
+                            <div class="error-card" *ngIf="errorContainer">
+                                <div class="error-icon">
+                                    <i class="fa fa-exclamation-circle"></i>
+                                </div>
+                                <div class="error-message d-flex flex-column">
+                                    {{ errorData }}
+                                    <button class="btn btn-dark" (click)="discardChecks()">Discard all checks (or)
+                                        Re-run
+                                        query</button>
+                                </div>
+
+                            </div>
+                        </as-split-area>
+                    </as-split>
+                </div>
+            </div> -->
+            </div>
+        </div>
+    </div>

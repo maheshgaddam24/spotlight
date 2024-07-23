@@ -1,0 +1,47 @@
+@import "../../../../utilities/global.scss";
+
+%button_style {
+  width: 93px;
+  height: 40px;
+  padding: 0px 20px;
+  border-radius: 20px;
+  gap: 10px;
+  border: 1px solid #2683C6;
+}
+%font_style {
+  font-family: $montserrat;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: 0em;
+}
+.report-workflow {
+  padding: $px_10;
+  width: $perc_100;
+}
+
+.form {
+  width: 99%;
+}
+
+.form-select {
+  width: 25%;
+}
+
+.text-box {
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+
+.clear-button {
+  @extend %button_style;
+  color: #2683c6;
+  background-color: #fff;
+}
+
+.create-button {
+  @extend %button_style;
+  background-color: #2683c6;
+  color: #fff;
+  width: fit-content;
+}

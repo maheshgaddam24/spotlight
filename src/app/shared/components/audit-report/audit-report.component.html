@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>
+  Download audit report 
+  <div mat-dialog-content class="d-flex flex-column">
+    <div>
+      <mat-radio-group (change)="radioSelected($event)" aria-label="Select an option">
+        <mat-radio-button value="1">ALL</mat-radio-button>
+        <mat-radio-button value="2">Custom date</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="d-flex flex-column">
+      <div>
+        <mat-form-field *ngIf="customDateRange" appearance="fill" class="example-form-field">
+          <mat-label>Enter a date range</mat-label>
+          <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+            <input matStartDate datePickerFormat="YYYY/MM/DD" formControlName="start" placeholder="Start date" />
+            <input matEndDate datePickerFormat="YYYY/MM/DD" formControlName="end" placeholder="End date" />
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker>
+            <mat-date-range-picker-actions>
+              <button mat-button matDateRangePickerCancel>Cancel</button>
+              <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateRange()">
+                Apply
+              </button>
+            </mat-date-range-picker-actions></mat-date-range-picker>
+
+          <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+          <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-radio-group (change)="radioSelectedType($event)" [(ngModel)]="selectedValue" *ngIf="reportType"
+          aria-label="Select an option">
+          <mat-radio-button value="CSV">CSV</mat-radio-button>
+          <mat-radio-button value="PDF">PDF</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="text-end">
+    <div class="buttons">
+      <button type="submit" mat-dialog-close  class="clear-button" >
+        {{"Cancel" | translate}}
+      </button>
+      <div class="d-flex">
+        
+        <button type="submit"  [disabled]="disableButton()"   (click)="report()" class="create-button">
+          Generate
+        </button>
+      </div>
+    </div>
+  </div>
+</h1>

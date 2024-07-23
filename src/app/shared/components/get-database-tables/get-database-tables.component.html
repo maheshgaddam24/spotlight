@@ -1,0 +1,52 @@
+<div class="container-body">
+  <div class="table-list d-flex flex-column justify-content-between gap-3">
+    <div [hidden]="hideFetchingTablesText" id="loading-bar-spinner" class="spinner">
+      <div class="spinner-icon"></div>
+    </div>
+    <!-- <div
+        class="d-flex"
+        *ngFor="let databaseTableslist of selectedDatabaseTableNames"
+      >
+        <input
+          [checked]="uniqueCheck(databaseTableslist)"
+          class="checkbox"
+          type="checkbox"
+          data-toggle="toggle"
+          (change)="onSelect($event)"
+          value="{{ databaseTableslist }}"
+        />
+        <p class="tableName">{{ databaseTableslist }}</p>
+      </div> -->
+
+    <div class="table-responsive">
+      <table class="table text-center m-0">
+        <thead>
+          <tr>
+            <th></th>
+            <th>SCHEMA NAME</th>
+            <th>TABLE/VIEWS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedDatabaseTableNames">
+            <td>
+              <input class="checkbox" id="{{ item }}" type="checkbox" value="{{ item }}" (change)="onSelect($event)">
+              <!-- <input type="checkbox" [(ngModel)]="item.selected" /> -->
+            </td>
+            <td>{{ item.split(".")[0] }}</td>
+            <td>{{ item.split(".")[1] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="buttons d-flex justify-content-end align-items-end gap-2">
+      <button class="btn next-button" type="button" (click)="sendSelectedTables()" >
+        {{ "getDatabaseTable.next" | translate }}
+      </button>
+      <button class="btn cancel-button" type="button" (click)="cancelGetDatabaseTableSelect()">
+        {{ "getDatabaseTable.cancel" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

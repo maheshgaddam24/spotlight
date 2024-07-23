@@ -1,0 +1,43 @@
+<div class="report-workflow">
+    <form [formGroup]="workFlowForm" (ngSubmit)="submitForm()" class="form">
+        <div class="job-name row px-3 py-3">
+            <label for="input" class="form-label col-lg-3 col-sm-12 col-md-12 col-xs-12" *ngIf="this.isBronzeSilver" >Job/Table Name</label>
+            <label for="input" class="form-label col-lg-3 col-sm-12 col-md-12 col-xs-12" *ngIf="!this.isBronzeSilver">Silver Table Name</label>
+
+            <input class="text-box col-lg-3 col-sm-12 col-md-12 col-xs-12" 
+            type="text" 
+            id="input" 
+            formControlName="jobname" 
+            [(ngModel)]="jobName" 
+            >
+     
+        </div>
+        <div class="d-flex row px-3 py-3">
+            <label  for="syncType" class="form-label col-lg-3 col-sm-12 col-md-12 col-xs-12">Synchronization Type</label>
+            <select   class="form-select col-lg-3 col-sm-12 col-md-12 col-xs-12" 
+            id="syncType" formControlName="syncType" [(ngModel)]="selectedSyncType" name="syncType">
+                <option value="manual">Manual Sync</option>
+                <option value="automatic">Automatic Sync</option>
+                <option value="event_based_trigger">Event Based Trigger</option>
+
+            </select>
+        </div>
+
+        <div *ngIf="selectedSyncType === 'automatic'">
+            <app-scheduling (childButtonEvent)="repeatMode($event)" (dayNameButtonEvent)="dayName($event)"
+                (dateTimeButtonEvent)="dateTime($event)" (timeButtonEvent)="time($event)"
+                [showDriftRange]="showDriftRangeFalse" (selectedMin)="getMin($event)">
+            </app-scheduling>
+        </div>
+
+        <div class="d-flex justify-content-end" style="margin-top: 35px;">
+            <button class="mx-2 clear-button" mat-dialog-close>Close</button>
+            <!-- <button type="submit" class="btn btn-dark">Save</button> -->
+            <button  class=" mx-2 create-button"   [disabled]="isLoading" type="submit">
+                <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': isLoading }"></i>
+                {{ DataLoadBtn }}
+              </button>
+        </div>
+
+    </form>
+</div>

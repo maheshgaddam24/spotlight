@@ -1,0 +1,49 @@
+@import "../../../app/utilities/global.scss";
+
+%button_style {
+  width: 93px;
+  height: 40px;
+  padding: 0px 20px;
+  border-radius: 20px;
+  gap: 10px;
+  border: 1px solid #2683C6;
+}
+%font_style {
+  font-family: $montserrat;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: 0em;
+}
+
+.eventCheckBox {
+  font-family: $montserrat;
+  font-weight: 700;
+  input {
+    width: 20px;
+    margin-top: 17px;
+    height: 19px;
+  }
+}
+.buttons {
+  height: 40px;
+  gap: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clear-button {
+  @extend %button_style;
+  color: #2683c6;
+  background-color: #fff;
+}
+
+.create-button {
+  @extend %button_style;
+  background-color: #2683c6;
+  color: #fff;
+  width: fit-content;
+}
+
+.create-button:disabled {
+  opacity: 0.5; 
+}

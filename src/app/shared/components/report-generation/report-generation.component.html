@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>
+  {{"reportGeneration.title" | translate}}
+  <div mat-dialog-content class="selectedOption">
+    <div class="d-flex">
+      <mat-radio-group (change)="radioSelected($event)" aria-label="Select an option">
+        <mat-radio-button value="CSV"> {{"reportGeneration.csv" | translate}}</mat-radio-button>
+        <mat-radio-button value="JSON"> {{"reportGeneration.json" | translate}}</mat-radio-button>
+        <mat-radio-button value="PARQUET"> {{"reportGeneration.PARQUET" | translate}}</mat-radio-button>
+        <mat-radio-button value="XML"> {{"reportGeneration.XML" | translate}}</mat-radio-button>
+
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="dividedCsv">
+      <mat-form-field class="mt-1" appearance="fill">
+        <mat-label> {{"reportGeneration.selectDivided" | translate}}</mat-label>
+        <mat-select (selectionChange)="radioSelectedDivided($event)">
+          <mat-option value=","> {{"reportGeneration.comma" | translate}}</mat-option>
+          <mat-option value="|"> {{"reportGeneration.pipe" | translate}}</mat-option>
+          <mat-option value="~"> {{"reportGeneration.tilde" | translate}}</mat-option>
+        </mat-select></mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions class="text-end">
+    <button mat-button mat-dialog-close>{{"Cancel" | translate}}</button>
+    <div>
+      <button mat-raised-button class="text-end" (click)="generateReport()" [disabled]="!isOptionSelected">
+        <a class="text-decoration-none"><i class="bi bi-download mx-1"></i>{{ "Generate" | translate}}</a>
+      </button>
+    </div>
+    <div *ngIf="isUploadEnabled">
+      <button mat-raised-button class="text-end mx-1" (click)="browseFile()">
+        <a class="text-decoration-none"><i class="bi bi-upload mx-1"></i>{{ "reportGeneration.upload" | translate}}</a>
+      </button>
+      <input style="display: none;" name="file" type="file" (change)="onFileChange($event)" id="browse-input" />
+    </div>
+  </div>
+</h1>

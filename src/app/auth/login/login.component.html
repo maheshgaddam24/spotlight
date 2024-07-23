@@ -1,0 +1,35 @@
+<div class="body d-flex justify-content-center align-items-center">
+  <div class="card">
+    <img src="../../../assets/images/logo.svg" alt="">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="form-group" id="email-container">
+        <label>{{ "login.email" | translate }} </label>
+        <input type="email" class="form-control" data-test="username" formControlName="username" id="inputEmail"
+          placeholder="Enter your username" required />
+      </div>
+      <div class="form-group inner-addon right-addon" id="password-container">
+        <label>{{ "login.password" | translate }}</label>
+        <input type="password" [type]="showPasswordOnPress ? 'text' : 'password'" class="form-control"
+          data-test="password" formControlName="password" id="inputPassword" placeholder="Enter your password" required />
+        <div (mousedown)="showPasswordOnPress = !showPasswordOnPress"
+          (mouseup)="showPasswordOnPress = !showPasswordOnPress">
+          <i alt="hide" class="fas fa-eye-slash eye-hide" [class.hide]="showPasswordOnPress"></i>
+          <i alt="show" class="fas fa-eye eye-show" [class.hide]="!showPasswordOnPress"></i>
+        </div>
+      </div>
+
+      <div class="form-group login-button" id="login-btn-container">
+        <button type="submit" data-test="login" class="btn" [disabled]="loginForm.invalid" >
+          {{ "login.login-tag" | translate }}
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="form-check d-flex">
+        <span>{{ "login.new-user" | translate }}</span>
+        <a data-test="signup-link" [routerLink]="['/signup']">{{ "login.signup" | translate }}</a>
+      </div>
+      
+    </form>
+  </div>
+</div>

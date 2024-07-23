@@ -1,0 +1,201 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class="breadcrumb-container">
+      <nav>
+        <ol class="breadcrumb d-flex m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" (click)="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li class="breadcrumb-element" aria-current="page">Report Viewer</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="container-header d-flex flex-column px-4">
+      <div class="header-name">Report Viewer</div>
+      <div class="d-flex align-items-center"><img class="info-icon" src="../../assets/images/info-green.svg" alt="info">
+        <div class="header-description">Export report datasets in CSV, Parquet, JSON, and XML</div>
+      </div>
+    </div>
+
+    <div class="body d-flex gap-3">
+      <div class="reports">
+        <div *ngIf="noReports" class="no-reports d-flex">
+          <div>
+            <h1>No reports created!</h1>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-responsive d-flex flex-column justify-content-between" *ngIf="!noReports">
+            <table class="table text-center m-0">
+              <thead>
+                <tr>
+                  <th class="report-name">{{ "goldLayerDashboard.table_dataSourceName" | translate }}</th>
+                  <th>{{ "goldLayerDashboard.table_recordsInserted" | translate }}</th>
+                  <th>{{ "goldLayerDashboard.table_recordsEliminated" | translate }}</th>
+                  <th>{{ "goldLayerDashboard.table_source" | translate }}</th>
+                  <th>{{ "goldLayerDashboard.created_at" | translate }}</th>
+                  <th class="actions">{{ "goldLayerDashboard.table_actions" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let goldLayertable of pagedGoldLayerTablesDataList; let i = index">
+                  <tr (click)="toggleAccordion(i);getTableInfo(i,goldLayertable)" [class.active-row]="isActive(i)">
+                    <td class="ds-name"
+                      [matTooltip]="goldLayertable.TABLE_NAME.length > 20 ? goldLayertable.TABLE_NAME : null">
+                      <p class="report-name">{{ goldLayertable.TABLE_NAME | uppercase}}</p>
+                    </td>
+                    <td>
+                      <span class="sources-td">{{ goldLayertable.ROW_COUNT || "-"}}</span>
+                    </td>
+                    <td>
+                      <span class="error-count">{{goldLayertable.ELIMINATED_RECORDS || "-"}}</span>
+                    </td>
+                    <td class="source-system"
+                      [matTooltip]="goldLayertable.SOURCE_SYSTEM?.length > 18 ? goldLayertable.SOURCE_SYSTEM : null">
+                      <p class="sources">{{goldLayertable.SOURCE_SYSTEM || "-"}}</p>
+                    </td>
+                    <td class="created-time">
+                      <span class="sources">{{ goldLayertable.CREATED_AT ? (goldLayertable.CREATED_AT |
+                        timezoneDate:'medium':'UTC') : '-' }}</span>
+                    </td>
+                    <td class="action-icons action-icons-arrow d-flex gap-4">
+                      <span class="accordion-icon action-export d-flex"><i class="bi bi-eye"
+                          (click)="openGoldTableColumnsData(goldLayertable,'resultData');" matTooltipPosition="below"
+                          matTooltip="View Data"></i>
+                        <img class="export-icon" (click)="openDialog(goldLayertable.TABLE_NAME)"
+                          src="../../assets/images/export.svg" alt="" matTooltipPosition="below"
+                          matTooltip="Export Report">
+                      </span>
+                      <span class="accordion-icon">
+                        <img class="arrow-up" *ngIf="isActiveDataSetTab(i)" src="../../assets/images/arrow-up.svg" alt="">
+                        <img class="arrow-down" *ngIf="!(isActiveDataSetTab(i))" src="../../assets/images/arrow-down.svg" alt="">
+
+                      </span>
+                    </td>
+                  </tr>
+                  <ng-container *ngIf="isActiveDataSetTab(i)">
+                    <tr *ngIf="displayNoErrorQueue(goldLayertable.ERROR_QUEUE_INFO)"
+                      [class.active-row]="isActiveDataSetTab(i)" class="header-row">
+                      <td colspan="6">
+                        <div class="titleNoErrorQueue">
+                          <div class="frame-1">
+                            <img src="../../../../assets/images/info.svg" alt="" placement="right"
+                              ngbTooltip="Type and click enter to add schema" />
+
+                          </div>
+                          <div class="titleNoErrorQueueTitle">
+                            <p>No Error Queue datasets loaded</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!(displayNoErrorQueue(goldLayertable.ERROR_QUEUE_INFO))"
+                      [class.active-row]="isActiveDataSetTab(i)" class="header-row">
+                      <td colspan="6">
+                        <div class="title">ERROR QUEUE DATASETS</div>
+                      </td>
+                    </tr>
+                    <tr [attr.colspan]="getColumnCount()" [class.active-row]="isActiveDataSetTab(i)"
+                      *ngFor="let data of goldLayertable.ERROR_QUEUE_INFO">
+                      <td class="source-name" [matTooltip]="data.dataset.length > 20 ? data.dataset : null">
+                        <p class="report-name">{{ data.dataset | uppercase}}</p>
+                      </td>
+                      <td>
+                        <span class="sources-td">{{"-"}}</span>
+                      </td>
+                      <td>
+                        <span class="error-count">{{data.rec_count || "-"}}</span>
+                      </td>
+                      <td>
+                        <p class="sources" [matTooltip]="data.source_system?.length > 18 ? data.source_system : null">{{
+                          data.source_system || "-"}}</p>
+                      </td>
+                      <td>
+                        <span class="sources-td">{{ data.CREATED_AT ? (data.CREATED_AT |
+                          timezoneDate:'medium':'UTC') : '-' }}</span>
+                      </td>
+                      <td class="action-icons d-flex justify-content-end gap-4">
+                        <i class="bi bi-eye" (click)="openGoldTableColumnsData(data,'eliminatedData')"
+                          matTooltipPosition="below" matTooltip="View Data"></i>
+                        <!-- <img class="export-icon" (click)="openDialog(data.error_table)"
+                        src="../../assets/images/export.svg" alt="" matTooltipPosition="below"
+                        matTooltip="Export Report"> -->
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+
+          </div>
+          <div *ngIf="!loading" class="pagination">
+            <ul>
+              <li class="page-item prev d-flex" [ngClass]="{'disabled': currentPage === 1}">
+                <img class="arrow-left" src="../../assets/images/arrow-left.svg" alt="">
+                <div (click)="setPage(currentPage - 1)" aria-label="Previous">
+                  PREV
+                </div>
+              </li>
+              <li class="page-item pages-list d-flex" *ngFor="let page of pages"
+                [ngClass]="{'active': currentPage === page}" (click)="setPage(page)">
+                <div>{{ page }}</div>
+              </li>
+              <li class="page-item next d-flex" [ngClass]="{'disabled': currentPage === totalPages}">
+                <div (click)="setPage(currentPage + 1)" aria-label="Next">
+                  NEXT
+                </div>
+                <img class="arrow-right" src="../../assets/images/arrow-right.svg" alt="">
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="cards-grid" *ngIf="!noReports">
+        <div class="card">
+          <div class="records-icon">
+            <img class="icon" src="../../assets/images/report datasets & viewer.svg" alt="">
+          </div>
+          <div class="heading-and-number">
+            <div class="heading">Total records inserted</div>
+            <div class="number-and-badge">
+              <div class="number" [matTooltip]="total_records_inserted > 9999 ? total_records_inserted : null">
+                {{total_records_inserted > 9999 ? '9999+' : total_records_inserted || "-"}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="error-records-icon">
+            <img class="icon" src="../../assets/images/error-records.svg" alt="">
+          </div>
+          <div class="heading-and-number">
+            <div class="heading">Records eliminated</div>
+            <div class="number-and-badge">
+              <div class="number" [matTooltip]="records_eliminated > 9999 ? records_eliminated : null">
+                {{records_eliminated > 9999 ? '9999+' : records_eliminated || "-"}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="reports-records-icon">
+            <img class="icon" src="../../assets/images/reports.svg" alt="">
+          </div>
+          <div class="heading-and-number">
+            <div class="heading">Total Reports</div>
+            <div class="number-and-badge">
+              <div class="number" [matTooltip]="total_reports > 9999 ? total_reports : null">
+                {{total_reports > 9999 ? '9999+' : total_reports || "-"}}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

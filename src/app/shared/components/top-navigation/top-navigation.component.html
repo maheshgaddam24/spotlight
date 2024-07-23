@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-nav">
+  <div class="container-fluid">
+    <div class="title">
+      <img class="logo" src="../../../assets/images/logo.svg" alt="" (click)="homeRoute()">
+    </div>
+    <div class="dropdown d-flex">
+      <!-- <div class="manual" matTooltip="Download Documentation">
+        <a href="https://spotlightus.s3.us-east-1.amazonaws.com/uploadfiles/Spotlight%20Tool%20Overview%20%281%29.docx">
+          <img class="download" src="../../../../assets/images/download.svg" alt="download">
+        </a>
+      </div> -->
+      <button mat-icon-button [matMenuTriggerFor]="notificationMenu" class="notification-button" (click)="markAsSeen()">
+        <mat-icon style="color: #2683C6;" *ngIf="unseenNotificationCount > 0" matBadge="{{ unseenNotificationCount }}"
+          matBadgeColor="warn">
+          notifications
+        </mat-icon>
+        <mat-icon style="color: #2683C6;" *ngIf="unseenNotificationCount === 0">notifications_none</mat-icon>
+      </button>
+      <mat-menu #notificationMenu="matMenu" class="notification-menu">
+        <div *ngIf="notifications.length > 0; else noNotifications">
+          <div *ngFor="let notification of notifications; let i = index">
+            <div class="notification-item">
+              <div class="notification-content">
+                <div class="notification-icon">
+                  <div [ngClass]="notification.attention === 'positive' ? 'green-circle' : 'red-circle'"></div>
+                </div>
+                <h5 class="notification-message">
+                  <span [ngClass]="notification.attention === 'positive' ? 'green-text' : 'red-text'">
+                    <mat-icon style="margin-bottom: -5px; margin-right: 8px;">{{ notification.attention === 'positive'
+                      ? 'check_circle' : 'warning' }}</mat-icon>
+                  </span>
+                  <span class="message-text">{{ notification.message }}</span>
+                  <span class="notification-date">
+                    <a style="cursor: pointer;" class="route" [href]="routeNotification(notification)" (click)="setSessionDetails(notification)">check now</a>
+                    <p class="m-0 createdDate">{{ notification.created_at ? (notification.created_at |
+                      timezoneDate:'medium':'UTC') : '-' }}</p>
+                  </span>
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noNotifications>
+          <div class="empty-notification">
+            <img style="width: 49px;" src="assets/images/no-notification.png" alt="Custom Icon" class="custom-icon">
+            <h5>No new notifications</h5>
+          </div>
+        </ng-template>
+      </mat-menu>
+
+      <button class="btn profile-details" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        data-backdrop="false">
+        <p class="userName">{{ username | uppercase }}</p>
+        <img class="profilePic" src="../../../assets/images/profile.png" alt="" />
+      </button>
+      <mat-icon style="cursor: pointer; color: #2683C6; " class="hover-effect" (click)="logOut()">logout</mat-icon>
+    </div>
+  </div>
+</nav>
+<ng-template #notificationTooltipContent>
+  <div class="notification-tooltip-content">
+    <mat-list>
+      <mat-list-item *ngFor="let notification of notifications">
+        {{ notification.message }}
+      </mat-list-item>
+    </mat-list>
+  </div>
+</ng-template>

@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-between">
+    <h1 mat-dialog-title>QUERY</h1><mat-icon style="justify-content: center;
+    margin: 19px;
+    display: flex; cursor: pointer;
+" (click)="copyToClipboard(query)">{{copyIcon}}</mat-icon>
+</div>
+<div mat-dialog-content class="py-0">
+    <pre prism class="dark query" language="sql">{{query}}</pre>
+</div>
+<div mat-dialog-actions class="text-end justify-content-end">
+    <button mat-raised-button mat-dialog-close>{{"close" | translate}}</button>
+</div>

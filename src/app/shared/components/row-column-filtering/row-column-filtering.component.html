@@ -1,0 +1,124 @@
+<div class="container d-flex flex-column justify-content-between">
+  <div class="columns-and-rows">
+    <div class="side-menu d-flex flex-column justify-content-between">
+      <ul class="nav nav-tabs tabs" role="tablist">
+        <li class="nav-item">
+          <a class="link" [class.active]="activeTab === 'columnFiltering'" id="columnFiltering-tab" data-toggle="tab"
+            (click)="activeTab = 'columnFiltering'" role="tab" aria-controls="columnFiltering"
+            aria-selected="true">Filter
+            columns</a>
+        </li>
+        <li class="nav-item disabled">
+          <a class="link" [class.active]="activeTab === 'rowFiltering'" id="rowFiltering-tab" data-toggle="tab"
+            (click)="activeTab = 'rowFiltering'; activateTab()" role="tab" aria-controls="rowFiltering" aria-selected="false">Filter
+            rows</a>
+        </li>
+      </ul>
+      <div *ngIf="activeTab === 'rowFiltering'" class="note-container d-flex align-items-start">
+        <img src="../../../../assets/images/info.svg" alt="info">
+        <div class="note">
+          Initially, it will be a full load. For the next step, if you want to change the load type to incremental,
+          click on the edit button for the specific data source job (by default, it will be a full load).
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="tab-pane  d-flex flex-column justify-content-between" *ngIf="activeTab === 'columnFiltering'"
+        [class.active]="activeTab === 'columnFiltering'" id="columnFiltering" role="tabpanel"
+        aria-labelledby="columnFiltering-tab">
+        <form [formGroup]="formGroup" *ngIf="responsesLoaded" class="columnFiltering-form">
+          <div class="grid-container">
+            <div class="column-select d-flex flex-column gap-2" *ngFor="let element of tableNames">
+              <label>{{ element }}</label>
+              <mat-form-field appearance="fill">
+                <mat-select [formControlName]="element" [value]="responses[element]" multiple>
+                  <mat-option *ngFor="let option of responses[element]" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <div class="submit-btn d-flex justify-content-end">
+          <button *ngIf="activeTab === 'columnFiltering'" class="btn next-filter" (click)="activateTab()"
+            type="submit">Next filter <img src="../../../../assets/images/next-icon.svg" alt="">
+          </button>
+        </div>
+      </div>
+      <div class="tab-pane" *ngIf="nextFilterEnabled" [class.active]="activeTab === 'rowFiltering'" id="rowFiltering"
+        role="tabpanel" aria-labelledby="rowFiltering-tab">
+        <form [formGroup]="queryForm" class="rowFiltering-form d-flex flex-column gap-1">
+          <div formArrayName="tables" class="me-1">
+            <div class="query-builder d-flex flex-column gap-3" *ngFor="let table of tables.controls; let i = index"
+              [formGroupName]="i">
+              <div class="d-flex justify-content-end">
+                <img src="../../../../assets/images/delete.svg" alt="del" (click)="removeElement(i)">
+              </div>
+              <div class="d-flex flex-column gap-1">
+                <label>Table name</label>
+                <select class="table-select" formControlName="tableName" (change)="change($event.target, i)">
+                  <option value="" disabled selected>Select table</option>
+                  <option *ngFor="let tableName of tableNames" [value]="tableName" id="{{ tableName }}">
+                    {{ tableName }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="config[i]">
+                <query-builder formControlName="query" id="{{ table }}" [config]="config[i]"
+                  (ngModelChange)="onQueryBuilderChange($event)">
+                  <ng-container *querySwitchGroup="let ruleset; let onChange=onChange">
+                    <mat-radio-group *ngIf="ruleset" [(ngModel)]="ruleset.condition"
+                      [ngModelOptions]="{standalone: true}" (ngModelChange)="onChange($event)">
+                      <mat-radio-button value="and">And</mat-radio-button>
+                      <mat-radio-button value="or">Or</mat-radio-button>
+                    </mat-radio-group>
+                  </ng-container>
+                  <ng-container class="query-buttons d-flex justify-content-between gap-1" *queryButtonGroup="
+                            let ruleset;
+                            let addRule = addRule;
+                            let addRuleSet = addRuleSet;
+                            let removeRuleSet = removeRuleSet
+                          ">
+                    <button mat-button class="add-rule" type="button" mat-button (click)="addRule()">
+                      + Rule
+                    </button>
+                    <button class="group-button" type="button" mat-button (click)="addRuleSet()">
+                      + Group
+                    </button>
+                    <button class="group-button" type="button" mat-button (click)="removeRuleSet()">
+                      - Group
+                    </button>
+                  </ng-container>
+                  <ng-container *queryRemoveButton="let rule; let removeRule = removeRule">
+                    <button class="btn" (click)="removeRule(rule)">
+                      <img src="../../../../assets/images/delete.svg" alt="del">
+                    </button>
+                  </ng-container>
+                </query-builder>
+              </div>
+
+            </div>
+          </div>
+          <mat-dialog-actions class="d-flex justify-content-end me-1">
+            <button class="btn add-table d-flex" type="button" (click)="addTable()">
+              <img class="add-icon" src="../../../../assets/images/add-icon.svg" alt="add">
+              Table
+            </button>
+          </mat-dialog-actions>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="buttons d-flex justify-content-end align-items-end gap-2">
+    <button class="btn next-button" *ngIf="activeTab === 'rowFiltering'" [disabled]="isLoading" type="submit"
+      (click)="loadData()">
+      {{ DataLoadBtn }}
+    </button>
+    <button class="btn cancel-button  close" (click)="cancelRowFilter()" type="button">
+      {{ "getDatabaseTable.cancel" | translate }}
+    </button>
+  </div>
+</div>

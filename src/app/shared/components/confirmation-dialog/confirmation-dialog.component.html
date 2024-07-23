@@ -1,0 +1,14 @@
+<div class="body">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <h4 class="warning">{{"delete.delete" | translate}} <b> "{{data[1]}}" </b> ?</h4>
+    <p class="warning">{{"delete.deleteMessage" | translate}} </p>
+  </div>
+  <div class="save d-flex justify-content-center">
+    <button class="btn btn-light" (click)=" closeModal() ">
+      {{"delete.cancel" | translate}}
+    </button>
+    <button class="btn btn-dark confirm" (click)="deleteProject()">
+      {{"delete.yes" | translate}}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,172 @@
+<div class="container-body d-flex flex-column">
+  <div class="source d-flex gap-4">
+    <div class="select-source d-flex flex-column">
+      <label class="select-label">Select source</label>
+      <select class="form-select" (change)="onSourceChange()" [(ngModel)]="selectedOption">
+        <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="showSecondDropdown" class="select-source d-flex flex-column">
+      <label class="select-label">Select {{ selectedOption === 'Database' ? 'database' : 'api'}}</label>
+      <select class="form-select" *ngIf="selectedOption === 'Database'" (change)="openDatabaseForm()">
+        <option value="Select" selected>Select</option>
+        <option *ngFor="let db of databases; let i = index">{{db}}</option>
+      </select>
+      <select class="form-select" *ngIf="selectedOption === 'API'" (change)="openApiForm()">
+        <option value="Select" selected>Select</option>
+        <option *ngFor="let api of apis; let i = index">
+          {{api}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="file-import" *ngIf="fileDiv">
+    <div class="d-flex flex-column gap-3">
+      <div class="browse-file d-flex flex-column justify-content-center align-items-center">
+        <div class="upload-icon d-flex justify-content-center">
+          <img class="image" src="../../../../assets/images/import.svg" alt="">
+        </div>
+        <div>
+          <div class="browse-text" (click)="browseFile()"><span class="text-highlight">Click to upload</span>(CSV)</div>
+          <input name="file" type="file" accept=".csv" (change)="onFileChange($event)" id="browse-input" />
+        </div>
+      </div>
+      <div class="upload-file" *ngIf="isFileLoaded">
+        <div class="file-icon d-flex justify-content-center">
+          <img class="file-image" src="../../../../assets/images/file-icon.svg" alt="">
+        </div>
+        <div class="d-flex flex-column gap-1">
+          <span class="file-name">{{ fileName }}</span>
+          <span class="file-size">{{ fileSize }}B - {{ "getData.importFile.import" | translate }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="buttons d-flex justify-content-end">
+      <button class="btn upload-button" (click)="upload(uploadedFileData)" [disabled]="!isFileLoaded">
+        {{ "getData.importFile.uploadButton" | translate }}
+      </button>
+      <button class="cancel-button" (click)="cancelUpload()">
+        {{ "getData.importFile.cancleButton" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="container-form" *ngIf="isDatabaseFormOpen">
+    <form class="form" name="databaseForm" [formGroup]="databaseForm" (keydown.enter)="$event.preventDefault()"
+      (ngSubmit)="submitDatabaseForm($event)">
+      <div class="form-group">
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="host">{{
+            "getData.dataBaseFrom.host" | translate
+            }}</label>
+          <input name="host" type="text" class="form-control" formControlName="host" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="port">{{
+            "getData.dataBaseFrom.port" | translate
+            }}</label>
+          <input name="port" type="text" class="form-control" formControlName="port" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbname">{{
+            "getData.dataBaseFrom.dataBaseName" | translate
+            }}</label>
+          <input name="dbname" type="text" class="form-control" formControlName="dbname" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbUsername">{{
+            "getData.dataBaseFrom.username" | translate
+            }}</label>
+          <input name="dbUsername" type="text" class="form-control" formControlName="dbUsername" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbPassword">{{
+            "getData.dataBaseFrom.password" | translate
+            }}</label>
+          <input name="dbPassword" type="password" class="form-control" formControlName="dbPassword" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label htmlFor="Schema">{{ "getData.dataBaseFrom.schema" | translate }}
+            <img src="../../../../assets/images/info.svg" alt="" placement="right"
+              ngbTooltip="Type and click enter to add schema" />
+          </label>
+          <mat-chip-list #chipList>
+            <input name="Schema" type="search" class="form-control" formControlName="Schema" matInput #chipInput
+              (keyup.enter)="addChip(chipInput); chipInput.value = ''" />
+          </mat-chip-list>
+          <div class="schema">
+            <mat-chip-list>
+              <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                {{ chip }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
+      </div>
+      <div class="buttons d-flex">
+        <button class="testConnection" type="submit"  [disabled]="hideTestConnectionBtn">
+          <span [hidden]="hideTestConnectionText">
+            {{ "getData.importFile.testConnection" | translate }}
+          </span>
+          <span [hidden]="hideTestingText" class="waviy">
+            {{ "getData.importFile.testing" | translate }}
+            <span style="--i: 1">.</span>
+          </span>
+        </button>
+        <button matStepperNext class="btn connect-data-source" type="button" [disabled]="connectButtonDisabled"
+          (click)="openDatabseTablesModal(projectId)">
+          {{ "connectButton" | translate }}
+        </button>
+        <button class="reset-button" type="button" (click)="resetDatabaseForm()">
+          {{ "resetButton" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="container-form" *ngIf="isApiFormOpen">
+    <form class="form" name="databaseForm" [formGroup]="apiForm" (ngSubmit)="submitAPIForm()">
+      <div class="form-group">
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="host">PATH TO FILE </label>
+          <input name="host" type="text" class="form-control" formControlName="url" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="requester-team">File Format </label>
+          <select name="file-formate" class="form-select" formControlName="format">
+            <option>csv</option>
+            <option>json</option>
+            <option>parquet</option>
+          </select>
+        </div>
+        <!-- <div class="d-flex flex-column gap-2">
+          <label htmlFor="dbname">SAS Token(optional)</label>
+          <input name="dbname" type="text" class="form-control" formControlName="dbname" required />
+        </div> -->
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbUsername">Shared Access Id </label>
+          <input name="dbUsername" type="text" class="form-control" formControlName="access_id" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbUsername">Shared Access Key </label>
+          <input name="dbUsername" type="text" class="form-control" formControlName="access_key" required />
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label class="control-label" htmlFor="dbPassword">Storgae Account </label>
+          <input name="dbPassword" type="text" class="form-control" formControlName="storage_account" required />
+        </div>
+      </div>
+      <div class="buttons d-flex">
+        <button class="btn connect-data-source" [disabled]="isLoading" type="submit">
+          <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': isLoading }"></i>
+          {{ DataLoadBtn }}
+        </button>
+        <button class="reset-button" type="button" (click)="resetAPIForm()">
+          {{ "resetButton" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

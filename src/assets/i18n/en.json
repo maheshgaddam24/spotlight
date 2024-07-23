@@ -1,0 +1,269 @@
+{
+    "title": "Spotlight",
+    "saveButton": "Save",
+    "nextRuleBtn": "Next",
+    "executeButton": "Execute",
+    "preview": "Preview",
+    "backButton": "Back",
+    "logOut": "Log out",
+    "continueButton": "Continue",
+    "connectButton": "Connect data source",
+    "resetButton": "Reset",
+    "1":"RAW TO BRONZE",
+    "2":"BRONZE TO SILVER",
+    "3":"SILVER TO GOLD",
+    "Confirm":"Confirm",
+    "projectDashboard":"Project Dashboard",
+    "Cancel":"Cancel",
+    "Generate":"Generate",
+    "selectColumns":"Select columns",
+    "close":"CLOSE",
+    "saveChanges":" Save changes",
+    "delete":{
+        "yes":"Yes, Delete",
+        "cancel":"No, Keep it",
+        "delete":"Delete",
+        "deleteMessage":"Deleting this project will also delete its data"
+        
+    },
+    "login": {
+        "title": "Spotlight",
+        "email": "Username",
+        "password": "Password",
+        "new-user": "Don't have an Account?",
+        "signup": "Sign Up",
+        "login-tag": "Login"
+    },
+    "signup": {
+        "title": "Spotlight",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "username": "Username",
+        "existing-user": "Already have an Account?",
+        "login": "Login",
+        "signup-tag": "Sign Up"
+    },
+    "project": {
+        "new-project-button": "Add Project",
+        "title": "Projects",
+        "table_projectName": " PROJECT NAME",
+        "created_time": "CREATED TIME",
+        "table_description": "DESCRIPTION",
+		"rules": "RULES",
+		"report_dashboard": "REPORT DASHBOARD",
+		"audit": "AUDIT",
+		"actions": "ACTIONS",
+		"actions_type": {
+			"edit": "Edit",
+			"delete": "Delete"
+		},
+		"links": "LINKS",
+        "addProject": {
+            "header": "Create new project",
+            "name": "Project Name*",
+            "Description": "Description*",
+            "userName": "User Name",
+            "createButton": "Create",
+			"whitespaceError": "Whitespace is not allowed."
+        },
+        "editProject": {
+            "header": "Edit project",
+            "updateButton": "Update"
+        },
+		"auditLogs" : {
+			"no_logs": "No logs are registered"
+		}
+    },
+    "dataSourceDashboard": {
+        "new": "Transformations",
+        "dataBase": "Data Source",
+        "work-bench":"Work Bench",
+        "query": "Query builder",
+        "sourceName": "DATA SOURCES",
+        "records": "TOTAL RECORDS",
+        "tableRecords": "TABLE RECORDS",
+		"workflows": "WorkFlows",
+		"status": "STATUS",
+        "created_at":"CREATED TIME",
+        "connectStatus":"Connectivity Status",
+        "fiveRuns":"(Last Five days)",
+        "noRuns":"No data registered",
+        "totalRecords":"Total Records Inserted",
+        "totalReports":"Total Reports Generated",
+        "reportCard":"Reports",
+        "noDataSources":"No data source added",
+        "subTitle":"“Click on New Data Source button to add Data Sources.”"
+    },
+    "query-builder": {
+        "query": "Query builder",		
+        "workBench": "Work Bench",
+        "transfer": "Silver Layer ---> Gold Layer",
+        "queryButton": "Query builder",
+        "Columns": "Columns",
+        "import-table": "List of tables imported",
+        "filter": "Filter",
+        "aggregate": "Aggregate",
+        "case": "Case Statement",
+        "groupBy": "Group By",
+        "derivedCol": "Derived Columns",
+        "joins": "Joins",
+        "orderBy": "Order By",
+        "gold_layer": "Gold Layer",
+        "AND": "AND",
+        "OR": "OR",
+        "operation": "Operation",
+        "exportButton": "Get Insights",
+        "customQuery": "Custom Query",
+		"select": "SELECT",
+		"from": "FROM",
+        "tab-case": {
+            "case": "CASE",
+            "when": "WHEN",
+            "then": "THEN",
+            "else": "ELSE",
+            "end-as": "END AS"
+        },
+        "tab-orderby": {
+            "orderby": "ORDER BY"
+        },
+        "tab-groupby": {
+            "groupby": "GROUP BY"
+        },
+		"select_table": "Please select a table to proceed"
+    },
+    "dataQualityCheck": {
+        "header": "Data Quality Check",
+        "Column": "Column Name",
+        "Null": "Null check",
+        "Date": "Date check",
+        "Special": "Special character check",
+        "String": "String check",
+        "Integer": "Integer check",
+        "true": "True",
+        "false": "False"
+    },
+    "getData": {
+        "header": "Get data source",
+        "file": "File",
+        "dataBase": "Database",
+        "api": "API",
+        "importFile": {
+            "header": "Import your file",
+            "dropText": "Drag and Drop to this dialog or browse for a file. Supported File Types: .CSV",
+            "browseButton": "BROWSE",
+            "import": "Imported successfully",
+            "success": "Successfully",
+            "cancleButton": "Cancel",
+            "uploadButton": "Upload",
+            "browserButton": "BROWSE",
+            "testConnection": "Test connection",
+            "testing": "Testing"
+        },
+        "dataBaseFrom": {
+            "header": "Let’s get you set up",
+            "host": "Host ",
+            "port": "Port ",
+            "dataBaseName": "Database Name ",
+            "username": "Database Username ",
+            "password": "Database Password ",
+            "schema": "Schema"
+        }
+    },
+    "getDatabaseTable": {
+        "header": "TABLES and VIEWS",
+        "back": "BACK",
+        "confirm": "CONFIRM",
+        "next": "Next",
+        "previous": "Previous",
+        "cancel": "Cancel"
+    },
+    "workBench": {
+        "header": "List of tables imported",
+        "transfer": "Bronze Layer ---> Silver Layer",
+        "select": "-Select-",
+        "newTable": "Create  Table",
+        "joins": {
+			"title": "Joins",
+            "header": "Joins",
+            "inner": "Inner Join",
+            "outer": "Outer Join",
+            "full": "Full Join",
+            "left": "Left Join",
+            "right": "Right Join"
+        },
+        "joinCondition": "Join Condition",
+        "all": "--All--",
+        "nextButton": "NEXT",
+		"updateBtn": "UPDATE",
+		"dataSource": "Data Sources",
+		"selectJoins": "Select Joins",
+		"selectDiv": "--SELECT--",
+		"createBtn": "CREATE"
+    },
+    "goldLayerDashboard": {
+        "title": "Report Dashboard",
+        "table_dataSourceName": "REPORT NAME",
+        "table_recordsInserted": "RECORDS INSERTED",
+        "table_recordsEliminated": "RECORDS ELIMINATED",
+        "table_source": "SOURCE",
+        "table_actions": "ACTIONS",
+        "created_at":"CREATED AT"
+    },
+	"workflowTransition": {
+		"rawToBronze": "Raw to Bronze",
+		"selectRule": "Select the Rule",
+		"bronzeToSilver": "Bronze to Silver",
+		"silverToGold": "Silver to Gold",
+		"scheduleWorkflowBtn": "Schedule Workflow",
+		"saveBtn": "Save"
+	},
+	"workflowDashboard": {
+        "noData":"No workflow created yet",
+		"createNewWorkflowBtn": "Create workflow",
+		"table" : {
+			"workflowName": "SCHEDULE NAME",
+			"schedule": "Schedule",
+			"inSights": "In Sights"
+		}
+	},
+	"scheduling": {
+		"heading": "Schedule the job",
+		"repeats": "Repeats",
+		"selectRepMode": "Select the Repeat Mode",
+		"repeatsOn": "Repeat on",
+		"startsAt": "Starts at",
+		"setBtn": "SET",
+        "minutes":"Select the Minutes interval"
+	},
+	"ruleDataView": {
+		"rawToBronze": "Raw to Bronze",
+		"bronzeToSilver": "Bronze to Silver",
+		"silverToGold": "Silver to Gold",
+        "workflowName": "Rule Name",
+		"ruleName": "Rule Name",
+		"sourceTable": "Source Tables",
+		"targetTable": "TARGET Table",
+		"description": "Description",
+		"createdBy": "Created By",
+		"createdAt": "Created At",
+		"preview": "Pre-view",
+		"edit": "Edit",
+		"isActive": "Is Active",
+        "noData":"No rule created yet",
+		"createNewRuleBtn": "Create new rule"
+	},
+    "reportGeneration":{
+        "title":"Generate Report",
+        "csv":"CSV",
+        "json":"JSON",
+        "XML":"XML",
+        "PARQUET":"PARQUET",
+        "selectDivided":"Select divided with",
+        "comma":"Comma(,)",
+        "pipe":"Pipe(|)",
+        "tilde":"Tilde(~)",
+        "upload":"XSD"
+    }
+    
+}

@@ -1,0 +1,21 @@
+export const navigationRoutes = {
+  signup: '/signup',
+  login: '/login',
+  goldLayerDashboard: '/goldlayer-dashboard/',
+  goldLayerTableColumnsData: '/goldlayer-preview/',
+  bronzeLayerTableData: '/schema-data/',
+  workBench: '/work-bench/',
+  stagingView: '/staging-view/',
+  projectDashboard: '/project-dashboard/',
+  projects: '/projects/',
+  queryBuilder: '/query-builder/',
+  dataBaseTables: '/database-tables',
+  rules: '/rules/',
+  workflow: '/workflow/',
+  auditLogs: '/audit/',
+  workflowDashboard: '/workflow-dashboard/',
+  querInsight:"/query/",
+  refreshPage:"/refresh-page",
+  workFlowInsights:'/work-flow-query',
+  data_lineage: '/project-view'
+};

@@ -1,0 +1,121 @@
+{
+  "title": "Spotlight",
+  "saveButton": "sauvegarder",
+  "backButton": "dos",
+  "login": {
+    "title": "Spotlight",
+    "email": "E-MAIL",
+    "password": "mot de passe",
+    "new-user": "Vous n'avez pas de compte?",
+    "login-tag": "Connexion"
+  },
+  "signup": {
+    "title": "Spotlight",
+    "email": "E-MAIL",
+    "password": "mot de passe",
+    "name": "Nom",
+    "existing-user": "Vous avez déjà un compte ?",
+    "signup-tag": "S'inscrire"
+  },
+  "project": {
+    "new-project-button": "Ajouter un projet",
+    "title": "projets",
+    "table_projectName": "NOM DU PROJET",
+    "table_primaryOwner": "Propriétaire principal",
+    "table_description": "Description",
+    "addProject": {
+      "header": "Créer un nouveau projet",
+      "name": "Nom du projet*",
+      "Description": "Description",
+      "userName": "Nom d'utilisateur",
+      "createButton": "Créer"
+    }
+  },
+  "dataSourceDashboard": {
+    "new": "Nouveau",
+    "dataBase": "Base de données",
+    "query": "Mettre en doute",
+    "report": "Rapport",
+    "sourceName": "NOM DE LA SOURCE DE DONNÉES",
+    "records": "RECORDS TOTAUX",
+    "tableRecords": "ENREGISTREMENTS DES TABLES",
+    "reports": "Rapport"
+  },
+  "query-builder": {
+    "query": "Générateur de requêtes",
+    "workBench": "Table de travail",
+    "transfer": "Couche d'argent ---> Couche d'or",
+    "queryButton": "Générateur de requêtes",
+    "Columns": "Colonnes",
+    "import-tabel": "Liste des tables importées",
+    "filter": "filtre",
+    "gold_layer": "Couche d'or",
+    "AND": "ET",
+    "OR": "OU",
+    "exportButton": "exporter"
+  },
+  "dataQualityCheck": {
+    "header": "Vérification de la qualité des données",
+    "Column": "Nom de colonne",
+    "Null": "Chèque nul",
+    "Date": "Date de vérification",
+    "Special": "Vérification des caractères spéciaux",
+    "String": "Vérification de la chaîne",
+    "Integer": "Vérification d'entier",
+    "true": "Vrai",
+    "false": "FAUX"
+  },
+  "getData": {
+    "header": "Obtenir des données",
+    "file": "Déposer",
+    "dataBase": "Base de données",
+    "api": "API",
+    "importFile": {
+      "header": "Importez votre fichier",
+      "dropText": "Faites glisser et déposez dans cette boîte de dialogue ou recherchez un fichier. Types de fichiers pris en charge : .CSV, texte, RDF. Hibou, TTL, JSON",
+      "browseButton": "PARCOURIR",
+      "import": "Importé",
+      "success": "Avec succès",
+      "cancleButton": "Annuler",
+      "uploadButton": "Télécharger",
+      "browserButton": "PARCOURIR"
+    },
+    "dataBaseFrom": {
+      "header": "Allons vous installer",
+      "host": "Hôte *",
+      "port": "Port *",
+      "dataBaseName": "Nom de la base de données",
+      "username": "Nom d'utilisateur de la base de données",
+      "password": "Mot de passe de la base de données",
+      "schema": "Schéma"
+    }
+  },
+  "getDatabaseTable": {
+    "header": "TABLEAUX et VUES",
+    "back": "DOS",
+    "confrim": "CONFIRMER"
+  },
+  "workBench": {
+    "header": "liste des tables importées",
+    "transfer": "Couche de bronze ---> Couche d'argent",
+    "select": "-Sélectionner-",
+    "newTable": "Créer un nouveau tableau",
+    "joins": {
+      "header": "Jointures",
+      "inner": "Jointure interne",
+      "outer": "Jointure externe",
+      "full": "Joindre complet",
+      "left": "Joint gauche",
+      "right": "Joindre à droite"
+    },
+    "joinCondition": "Condition de jointure",
+    "all": "--Tout--",
+    "nextButton": "SUIVANT"
+  },
+  "goldLayerDashobard": {
+    "title": "Tableau de bord de la couche d'or",
+    "table_dataSourceName": "NOM DE LA SOURCE DE DONNÉES",
+    "table_recordsInserted": "ENREGISTREMENTS INSÉRÉS",
+    "table_report": "RAPPORT"
+  }
+}

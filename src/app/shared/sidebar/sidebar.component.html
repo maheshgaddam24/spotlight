@@ -1,0 +1,116 @@
+<div class="sidebar" [ngClass]="{ 'expanded': isExpanded }">
+  <div class="header">
+    <h1>Menu</h1>
+    <div class="toggle" (click)="handleSidebarToggle()">
+      <span class="chevron"></span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="link">
+      <div class="content" matTooltipPosition="right" matTooltip="Projects" [routerLink]="['/projects']"
+        [routerLinkActive]="'active'">
+        <div class="icon">
+          <mat-icon>
+            dashboard_customize
+          </mat-icon>
+        </div>
+        <div class="title">Projects</div>
+      </div>
+    </div>
+    <div class="link" joyrideStep="step1" [stepContent]="DataSources" [stepContentParams]="{'name': 'Data'}">
+      <div class="content" matTooltipPosition="right" matTooltip="Source Datasets"
+        [routerLink]="['project-dashboard', getProjectIdFromSessionStorage()]" [routerLinkActive]="'active'">
+        <div class="icon">
+          <mat-icon>table_chart</mat-icon>
+        </div>
+        <div class="title">Source Datasets</div>
+      </div>
+    </div>
+    <div class="link">
+      <div class="content justify-content-between" (click)="toggleWorkflows()">
+        <div class="d-flex flex-row" style="width: 100%;">
+          <div class="icon">
+            <mat-icon>list</mat-icon>
+          </div>
+          <div>
+            <div class="title">Work Flow</div>
+          </div>
+        </div>
+        <div class="toggle">
+          <i *ngIf="!workflowsExpanded" class="bi-chevron-down"></i>
+          <i *ngIf="workflowsExpanded" class="bi-chevron-up"></i>
+        </div>
+      </div>
+      <div class="child-links" *ngIf="workflowsExpanded">
+        <!-- <div class="content" joyrideStep="step2" [stepContent]="workBench" matTooltipPosition="right"
+          matTooltip="Work Bench" [routerLink]="['work-bench', getProjectIdFromSessionStorage()]"
+          [routerLinkActive]="'active'">
+          <div class="icon">
+            <mat-icon>join_right</mat-icon>
+          </div>
+          <div class="title">Work Bench</div>
+        </div> -->
+        <!-- Rules link -->
+        <div class="content" joyrideStep="step3" [stepContent]="Rules" matTooltipPosition="right" matTooltip="Rules"
+          [routerLink]="['rules', getProjectIdFromSessionStorage()]" [routerLinkActive]="'active'">
+          <div class="icon">
+            <mat-icon>format_list_numbered</mat-icon>
+          </div>
+          <div class="title">Set Rules</div>
+        </div>
+        <!-- Query Builder link -->
+        <div class="content" joyrideStep="step4" [stepContent]="ReportCrafter" matTooltipPosition="right"
+          matTooltip="Report Builder" [routerLink]="['query-builder', getProjectIdFromSessionStorage()]"
+          [routerLinkActive]="'active'">
+          <div class="icon">
+            <mat-icon>integration_instructions</mat-icon>
+          </div>
+          <div class="title">Build Report</div>
+        </div>
+
+        <div class="content" joyrideStep="step5" [stepContent]="jobSchedule" matTooltipPosition="right"
+          matTooltip="Job Scheduler" [routerLink]="['workflow-dashboard', getProjectIdFromSessionStorage()]"
+          [routerLinkActive]="'active'">
+          <div class="icon">
+            <mat-icon>account_tree</mat-icon>
+          </div>
+          <div class="title">Run Queries</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="link">
+      <div class="content" matTooltipPosition="right" matTooltip="Report Datasets" joyrideStep="step6"
+        [stepContent]="report" [routerLink]="['goldlayer-dashboard', getProjectIdFromSessionStorage()]"
+        [routerLinkActive]="'active'">
+        <div class="icon">
+          <mat-icon>task</mat-icon>
+        </div>
+        <div class="title">Final Reports</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer" matTooltipPosition="above" matTooltip="Help" (click)="help()" style="position: absolute;
+  right: 0;
+  bottom: 0;
+  margin-right: 1rem;"><mat-icon>help</mat-icon></div>
+</div>
+
+<ng-template #DataSources>
+  <pre> <b>Source Datasets</b> include source management, scheduling, status monitoring, traceability,
+  and data drift configuration</pre>
+</ng-template>
+<!-- <ng-template #workBench> Create and manage silver layer tables for data processing.</ng-template> -->
+<ng-template #ReportCrafter>
+  <pre><b>Report Builder</b> Design and build queries for dataset transformations. </pre>
+</ng-template>
+<ng-template #Rules>
+  <pre><b>Rules</b> where you can see the information of the job created in the report builder. 
+This includes details such as the generated query, sync type, and the source tables used in the query.</pre>
+</ng-template>
+<ng-template #jobSchedule>
+  <pre> <b>Job Scheduler</b> Schedule and execute data transformation tasks.</pre>
+</ng-template>
+<ng-template #report>
+  <pre> <b>Report Datasets</b> View the finalized gold layer datasets ready for reporting. </pre>
+</ng-template>

@@ -1,0 +1,334 @@
+<div class="container-fluid">
+  <div class="header d-flex justify-content-between">
+    <h2 class="projects p-4 m-0">
+      {{ "project.title" | translate }}
+    </h2>
+    <div class="search-box">
+      <div *ngIf="isSearchEnable" class="filter-bar d-flex justify-content-end">
+        <i class="bi bi-search"></i>
+        <input class="filter" [(ngModel)]="searchText" placeholder="Search Here" />
+      </div>
+      <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight"
+        aria-labelledby="offcanvasRightLabel">
+        <div class="close-canvas">
+          <div class="close">
+            <i class="bi bi-x close-button" #closeButton data-bs-dismiss="offcanvas" aria-label="Close"
+              (click)="closeCreateProjectModal()"></i>
+          </div>
+        </div>
+        <div class="canvas-body">
+          <div>
+            <h5 *ngIf="!isEdit" id="offcanvasRightLabel">
+              {{ "project.addProject.header" | translate }}
+            </h5>
+            <h5 *ngIf="isEdit" id="offcanvasRightLabel">
+              {{ "project.editProject.header" | translate }}
+            </h5>
+          </div>
+          <form name="projectForm" [formGroup]="createNewProjectForm">
+            <div class="form-group create-form">
+              <label for="projectName">{{
+                "project.addProject.name" | translate
+                }}</label>
+              <input type="text" class="form-control project-name" name="projectName" placeholder="Enter project name"
+                formControlName="project_name" (keypress)="keyPressAlphaNumericWithCharacters($event)" />
+              <div *ngIf="
+                  errorWhiteSpaceMessage['project_name'].touched &&
+                  errorWhiteSpaceMessage['project_name'].invalid
+                " class="alert">
+                <div *ngIf="errorWhiteSpaceMessage['project_name'].errors?.['cannotContainSpace']" class="Whitespace">
+                  {{ "project.addProject.whitespaceError" | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group create-form">
+              <label for="description">
+                {{ "project.addProject.Description" | translate }}
+              </label>
+              <textarea type="text" class="form-control project-description" name="description"
+                formControlName="description" placeholder="Describe project here"></textarea>
+              <div *ngIf="createNewProjectForm.get('description').errors?.invalidDescription" class="text-danger">
+                Description should not exceed 50 characters.
+              </div>
+            </div>
+            <p></p>
+
+          </form>
+          <!--  -->
+        </div>
+        <div class="canvas-buttons">
+          <div class="buttons">
+            <button type="submit" class="clear-button" (click)="clearForm()">Clear</button>
+            <div class="d-flex" (click)="submit()">
+              <button *ngIf="!isEdit" type="submit" [disabled]="disableButton()" class="create-button">
+                {{ "project.addProject.createButton" | translate }}
+              </button>
+              <button *ngIf="isEdit" type="submit">
+                {{ "project.editProject.updateButton" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-body d-flex row m-0 p-4">
+    <div [hidden]="projectLoader" class="wrapper">
+      <div class="card-loader card-loader--tabs"></div>
+      <div class="card-loader card-loader--tabs"></div>
+      <div class="card-loader card-loader--tabs"></div>
+      <div class="card-loader card-loader--tabs"></div>
+    </div>
+    <div class="col-md-12 p-0">
+      <div class="grid-container" *ngIf="filteredProjectListData.length > 0; else noProjects">
+        <div class="new-project">
+          <div class="frame d-flex justify-content-center align-items-center flex-column">
+            <div class="d-flex justify-content-center align-items-center create mt-3">
+              <i class="plus bi bi-plus m-0" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight" (click)="addProject()"></i>
+            </div>
+            <div>
+              <h3 class="create-text">{{ "project.addProject.header" | translate }}</h3>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let source of filteredProjectListData" class="project-card" [@fadeInOut]>
+          <header class="project-card-title d-flex" (click)="openProjectDataSources(source.id, source.project_name)">
+            <div class="initial-avatar" [style.backgroundColor]="source.color_code">
+              {{ source.project_name.charAt(0) | uppercase }}
+            </div>
+            <div class="project-details">
+              <div matTooltipPosition="above"
+                [matTooltip]="source.project_name.length > 15 ? source.project_name : null" class="header_tile">
+                <h3 class="project-title">{{ source.project_name | uppercase }}</h3>
+              </div>
+              <div class="description" [matTooltip]="source.description.length > 20 ? source.description : null">
+                {{ source.description }}
+              </div>
+            </div>
+          </header>
+          <footer class="d-flex justify-content-between">
+            <div class="d-flex gap-2"> <button placement="bottom" matTooltip="Rules" type="button" class="rules-button"
+                (click)="getProjectRules(source)">
+                <img class="rules-icon" src="../../assets/images/rules.png" alt="rules">
+              </button>
+              <button placement="bottom" matTooltip="Reports" type="button" class="reports-button"
+                (click)="navigateGoldLayerDashboard(source)">
+                <img class="reports-icon" src="../../assets/images/reports.png" alt="reports">
+              </button>
+              <button placement="bottom" matTooltip="Audit logs" type="button" class="logs-button"
+                (click)="loadAudit(source.id)" data-bs-toggle="offcanvas" data-bs-target="#auditOffcanvasRight"
+                aria-controls="offcanvasRight">
+                <img class="logs-icon" src="../../assets/images/logs.png" alt="logs">
+              </button>
+            </div>
+            <div type="button" class="d-flex gap-2"><mat-icon data-bs-toggle="offcanvas"
+                data-bs-target="#manage_accounts" aria-controls="offcanvasRight"
+                (click)="getRolesAssigned(source.user_id,source.project_name,source.id)" *ngIf="source.role == 'owner'"
+                [matTooltip]="getRolesDataList(source)">manage_accounts</mat-icon>
+              <mat-icon data-bs-toggle="offcanvas" data-bs-target="#manage_accounts" aria-controls="offcanvasRight"
+                (click)="getRolesAssigned(source.user_id,source.project_name,source.id)"
+                *ngIf="source.role == 'superuser'" [matTooltip]="source.role | titlecase">manage_accounts</mat-icon>
+              <div class="role-avatar"
+                [ngClass]="{'reader': source.role == 'reader', 'contributor': source.role == 'contributor'}"
+                *ngIf="source.role == 'reader' || source.role == 'contributor'" [matTooltip]="getRolesDataList(source)" >
+                {{ source.role.charAt(0) | uppercase }}</div>
+            </div>
+            <!-- <div *ngIf="source.wf_failure_count > 0">
+              <button (click)="openProjectDataSources(source.id, source.project_name)" matTooltip="Failed jobs"
+                type="button" class="btn btn-circle btn-sm icon-container">
+                {{ source.wf_failure_count
+                > 9 ? '9+' : source.wf_failure_count }}
+              </button>
+            </div> -->
+          </footer>
+        </div>
+      </div>
+
+      <ng-template #noProjects>
+        <div class="no-projects-continer d-flex justify-content-center align-items-center flex-column mt-4">
+          <div class="new-project">
+            <div class="frame d-flex justify-content-center align-items-center flex-column">
+              <div class="d-flex justify-content-center align-items-center create mt-3">
+                <i class="plus bi bi-plus m-0" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight" (click)="addProject()"></i>
+              </div>
+              <div>
+                <h3 class="create-text">{{ "project.addProject.header" | translate }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="info d-flex">
+            <img src="../../assets/images/fi_info.png" alt="info">
+            <p class="info-text m-0">Currently there are no available projects, click on the above CTA to create a new
+              project</p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="auditOffcanvasRight"
+    aria-labelledby="offcanvasRightLabel">
+    <div>
+      <app-audit-logs *ngIf="triggerAuditLogs" [exportEnable]="true" [view]="'full'"
+        [projectId]="auditProjectId"></app-audit-logs>
+    </div>
+
+  </div>
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="manage_accounts"
+    aria-labelledby="offcanvasRightLabel">
+    <div class="close-canvas">
+      <div class="close">
+        <i class="bi bi-x close-button" #closeButton data-bs-dismiss="offcanvas" aria-label="Close"
+          (click)="closeCreateProjectModal()"></i>
+      </div>
+    </div>
+    <div class="canvas-body">
+      <div>
+        <h5 id="offcanvasRightLabel">
+          Manage contributors
+        </h5>
+        <div class="d-flex justify-content-between">
+          <p>{{selectedProjectName}}</p>
+          <div *ngIf="currentRole" matTooltipPosition="above" matTooltip="Sync Type" class="syncType">
+            <p class="p-0 m-0">{{currentRole | titlecase}}</p>
+          </div>
+        </div>
+
+      </div>
+      <form (ngSubmit)="addUserRole()">
+        <div class="form-group roles-form">
+          <label for="userName">User Name *</label>
+          <input type="text" class="form-control user-name-dropdown" [(ngModel)]="userInput" name="itemName"
+            (input)="filterUsers($event)" autocomplete="off">
+          <div *ngIf="!isUserValid" class="d-flex justify-content-end p-1 error-message">
+            <p class="m-0 p-0 no-user">User not found</p>
+          </div>
+          <div *ngIf="isUserAssigned" class="d-flex justify-content-end p-1 error-message">
+            <p class="m-0 p-0 no-user">User already found</p>
+          </div>
+          <div *ngIf="filteredUsers.length > 0" class="autocomplete">
+            <div *ngFor="let user of filteredUsers" (click)="onSelectUser(user)" class="d-flex flex-column">
+              <span class="user-name">{{ user.username }}</span>
+              <span class="user-email">{{user.email}}</span>
+            </div>
+          </div>
+          <label for="role">Roles *</label>
+          <select class=" form-control role-name-dropdown" [(ngModel)]="userRole" name="itemRole">
+            <option value="owner">Owner</option>
+            <option value="contributor">Contributor</option>
+            <option value="reader">Reader</option>
+          </select>
+        </div>
+        <div class="userAdded"> <button type="submit" class="add-button"
+            [disabled]="!isUserValid || isNewContributor || isUserAssigned">
+            <span *ngIf="!isNewContributor">Add</span>
+            <mat-spinner diameter="30" *ngIf="isNewContributor"></mat-spinner>
+          </button> </div>
+      </form>
+      <div *ngIf="usersAdded.length === 0" class="d-flex justify-content-center">
+        <h5 class="noContributors">No contributors added!</h5>
+      </div>
+      <div class="user-roles-table">
+        <mat-expansion-panel *ngFor="let userAdded of usersAdded; let i = index" class="py-2"
+          [ngClass]="{'remove-animation': isDeletingSwipe[i]}">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="user-title">{{ userAdded.user_name | titlecase }}</div>
+              <div *ngIf="!editMode[i]" class="user-role">{{ userAdded.role | titlecase }}</div>
+              <ng-container *ngIf="editMode[i]">
+                <select class="edit-role" [(ngModel)]="editedRole" (change)="onRoleChange(userAdded, $event,i)"
+                  (click)="$event.stopPropagation()">
+                  <option *ngFor="let role of roles" [value]="role" [selected]="role === userAdded.role">{{ role |
+                    titlecase }}</option>
+                </select>
+              </ng-container>
+            </mat-panel-title>
+            <mat-panel-description>
+              <button mat-button class="delete-button" (click)="toggleEditMode(i);$event.stopPropagation();"
+                [disabled]="isUpdating[i]">
+                <img *ngIf="!isUpdating[i]" class="action-icon"
+                  [src]="editMode[i] ? '../../assets/images/cancel.svg' : '../../assets/images/edit-icon.svg'" alt=""
+                  matTooltip="{{ editMode[i] ? 'Cancel' : 'Edit' }}" matTooltipPosition="below">
+                <mat-spinner *ngIf="isUpdating[i]" diameter="20"></mat-spinner></button>
+              <button mat-button class="delete-button" (click)="deleteAddedUser(userAdded, i);$event.stopPropagation();"
+                [disabled]="isDeleting[i]">
+                <i *ngIf="!isDeleting[i]" class="fas fa-trash-alt"></i>
+                <mat-spinner class="spinner-delete" *ngIf="isDeleting[i]" diameter="20"></mat-spinner>
+              </button>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+
+        <!-- <mat-card *ngFor="let userAdded of usersAdded; let i = index">
+          <mat-card-header>
+            <mat-card-title>{{ userAdded.user_name | titlecase }}</mat-card-title>
+            <mat-card-subtitle>
+              <div *ngIf="!editMode[i]">{{ userAdded.role | titlecase }}</div>
+              <ng-container *ngIf="editMode[i]">
+                <select [(ngModel)]="editedRole" (change)="onRoleChange(userAdded, $event,i)">
+                  <option *ngFor="let role of roles" [value]="role" [selected]="role === userAdded.role">{{ role |
+                    titlecase }}</option>
+                </select>
+              </ng-container>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button mat-button class="delete-button" (click)="toggleEditMode(i)" [disabled]="isUpdating[i]">
+              <img *ngIf="!isUpdating[i]" class="action-icon"
+                [src]="editMode[i] ? '../../assets/images/cancel.svg' : '../../assets/images/edit-icon.svg'" alt=""
+                matTooltip="{{ editMode[i] ? 'Cancel' : 'Edit' }}" matTooltipPosition="below">
+              <mat-spinner *ngIf="isUpdating[i]" diameter="20"></mat-spinner></button>
+            <button mat-button class="delete-button" (click)="deleteAddedUser(userAdded, i)" [disabled]="isDeleting[i]">
+              <i *ngIf="!isDeleting[i]" class="fas fa-trash-alt"></i>
+              <mat-spinner class="spinner-delete" *ngIf="isDeleting[i]" diameter="20"></mat-spinner>
+            </button>
+          </mat-card-actions>
+        </mat-card> -->
+
+        <!-- <table *ngIf="!(usersAdded.length === 0)" class="table text-center m-0">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let userAdded of usersAdded; let i = index"
+              [ngClass]="{'remove-animation': isDeletingSwipe[i]}">
+              <td>{{ userAdded.user_name | titlecase }}</td>
+              <td>
+                <ng-container *ngIf="!editMode[i]">
+                  {{ userAdded.role | titlecase }}
+                </ng-container>
+                <ng-container *ngIf="editMode[i]">
+                  <select [(ngModel)]="editedRole" (change)="onRoleChange(userAdded, $event,i)">
+                    <option *ngFor="let role of roles" [value]="role" [selected]="role === userAdded.role">{{ role |
+                      titlecase }}</option>
+                  </select>
+                </ng-container>
+              </td>
+              <td>
+                <button class="delete-button" (click)="toggleEditMode(i)" [disabled]="isUpdating[i]">
+                  <img *ngIf="!isUpdating[i]" class="action-icon"
+                    [src]="editMode[i] ? '../../assets/images/cancel.svg' : '../../assets/images/edit-icon.svg'" alt=""
+                    matTooltip="{{ editMode[i] ? 'Cancel' : 'Edit' }}" matTooltipPosition="below">
+                  <mat-spinner *ngIf="isUpdating[i]" diameter="20"></mat-spinner>
+                </button>
+
+                <button class="delete-button" (click)="deleteAddedUser(userAdded, i)" [disabled]="isDeleting[i]">
+                  <i *ngIf="!isDeleting[i]" class="fas fa-trash-alt"></i>
+                  <mat-spinner class="spinner-delete" *ngIf="isDeleting[i]" diameter="20"></mat-spinner>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+
+      </div>
+    </div>
+  </div>
+</div>

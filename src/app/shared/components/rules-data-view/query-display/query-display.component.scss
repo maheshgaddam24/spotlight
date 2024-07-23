@@ -1,0 +1,9 @@
+@import "../../../../utilities/global.scss";
+
+.query {
+    width: $perc_100;
+    border-radius: $px_10;
+    overflow: $overflow_auto;
+    padding: $px_12;
+    white-space: pre-wrap;
+}

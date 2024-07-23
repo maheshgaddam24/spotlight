@@ -1,0 +1,123 @@
+<div class="body d-flex justify-content-between">
+  <div class="container-fluid d-flex gap-2">
+    <div class="table d-flex" [ngClass]="{ 'error-data-table': data == '' }">
+      <ng-container *ngIf="correct">
+        <table *ngFor="let bronzeLayerTablecolumns of bronzeTablePreviewData ;  let i = index"
+          [class.dotted-border]="i === hoveredColumnIndex" class="table-responsive text-left" id="table"
+          [cellSpacing]="2" [class.accepting]="tableAcceptingDrop[i]" (dragover)="onDragOverTable($event, i)"
+          (drop)="onDrop($event, bronzeLayerTablecolumns, i)" (dragleave)="onDragLeaveTable(i)">
+          <thead>
+            <tr>
+              <th class="d-flex gap-2">
+                <div class="d-flex flex-column gap-1">
+                  <div class="d-flex">{{ bronzeLayerTablecolumns }}
+                  </div>
+                  <p class="m-0 p-0 schema">
+                    {{ getSchemaForColumn(bronzeLayerTablecolumns) | titlecase }}
+                  </p>
+                </div>
+                <div  class="d-flex gap-1">
+                  <span class="arrow-icon" (click)="toggleSort(bronzeLayerTablecolumns, 'asc')"
+                    [ngClass]="{ 'active': getSortColumn('column') === bronzeLayerTablecolumns && getSortColumn('sort') === 'asc', 'highlighted': getSortColumn('column') === bronzeLayerTablecolumns && getSortColumn('sort') === 'asc' }">&#8593;</span>
+                  <span class="arrow-icon" (click)="toggleSort(bronzeLayerTablecolumns, 'desc')"
+                    [ngClass]="{ 'active': getSortColumn('column') === bronzeLayerTablecolumns && getSortColumn('sort') === 'desc', 'highlighted': getSortColumn('column') === bronzeLayerTablecolumns && getSortColumn('sort') === 'desc' }">&#8595;</span>
+                </div>
+                <div class="applied-check-box">
+                  <span *ngFor="let appliedCheck of appliedChecks[bronzeLayerTablecolumns]; let index = index"
+                    class="applied-check">
+                    <button class="remove-check-button" (click)="removeCheck(bronzeLayerTablecolumns, index)">
+                      X
+                    </button>
+                    <ng-container *ngIf="isAppliedCheckString(appliedCheck)">{{ appliedCheck }}</ng-container>
+                    <ng-container *ngIf="isAppliedCheckObject(appliedCheck)">
+                      <div *ngIf="getFirstObjectKey(appliedCheck) === 'dateFormat'" matTooltip="Date check">
+                        {{dateCheckDisplay(getFirstObjectKeyValue(appliedCheck))}}</div>
+                      <diV *ngIf="getFirstObjectKey(appliedCheck) !== 'dateFormat'">
+                        {{ getFirstObjectKey(appliedCheck) }} = {{getFirstObjectKeyValue(appliedCheck)}}
+                      </diV>
+                    </ng-container>
+                  </span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-dark bg-light">
+            <tr class="correctQueue" *ngFor="let value of data">
+              <ng-container *ngIf="!this.noTables.includes(bronzeLayerTablecolumns)">
+                <td class="p-1"
+                  [ngClass]="{ 'null-text-hoverd': value[bronzeLayerTablecolumns] === null && hoveredColumnIndex === i && selectedCheckNull,'null-text': value[bronzeLayerTablecolumns] === null,'grey-text-hoverd': value[bronzeLayerTablecolumns] !== null && hoveredColumnIndex === i && selectedCheckNull}">
+                  {{ value[bronzeLayerTablecolumns] !== null ? (value[bronzeLayerTablecolumns] !== "" ?
+                  value[bronzeLayerTablecolumns] : ' ') : 'null' }}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="error">
+        <table *ngFor="let bronzeLayerTablecolumns of errorQueue_columns ;  let i = index"
+          [class.dotted-border]="i === hoveredColumnIndex" class="table-responsive text-left" id="table"
+          [cellSpacing]="2" [class.accepting]="tableAcceptingDrop[i]" (dragover)="onDragOverTable($event, i)"
+          (drop)="onDrop($event, bronzeLayerTablecolumns, i)" (dragleave)="onDragLeaveTable(i)">
+          <thead>
+            <tr>
+              <th class="d-flex">{{ bronzeLayerTablecolumns }}
+                <div class="applied-check-box">
+                  <span *ngFor="let appliedCheck of appliedChecks[bronzeLayerTablecolumns]; let index = index"
+                    class="applied-check">
+                    <button class="remove-check-button" (click)="removeCheck(bronzeLayerTablecolumns, index)">
+                      X
+                    </button>
+                    <ng-container *ngIf="isAppliedCheckString(appliedCheck)">{{ appliedCheck }}</ng-container>
+                    <ng-container *ngIf="isAppliedCheckObject(appliedCheck)">
+                      <div *ngIf="getFirstObjectKey(appliedCheck) === 'dateFormat'">
+                        {{dateCheckDisplay(getFirstObjectKeyValue(appliedCheck))}}</div>
+                      <diV *ngIf="getFirstObjectKey(appliedCheck) !== 'dateFormat'">
+                        {{ getFirstObjectKey(appliedCheck) }} = {{getFirstObjectKeyValue(appliedCheck)}}
+                      </diV>
+                    </ng-container>
+                  </span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-dark bg-light error-data-table">
+            <tr class="errorQueue" *ngFor="let value of error_queue">
+              <td [ngClass]="{'null-text': value[bronzeLayerTablecolumns] === null}">
+                {{ value[bronzeLayerTablecolumns] !== null ? (value[bronzeLayerTablecolumns] !== "" ?
+                value[bronzeLayerTablecolumns] : ' ') : 'null' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="no-data-preview">
+          <ng-container *ngIf="error_queue.length === 0">
+            <div class="no-data-text">No data to display</div>
+            <button class="discard-checks mt-2" (click)="discardChecks()">Refresh</button>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="check-list d-flex">
+      <div class="query-checks d-flex align-items-center" *ngIf="!(data == '')">DQ checks:</div>
+      <div class="collapsible d-flex" *ngIf="!(data == '')">
+        <div *ngFor="let check of checks; let i = index" [draggable]="true" (dragstart)="onDragStart(check, i)"
+          (dragend)="onDragEnd()" (dragover)="onDragOver(i)" class="draggable-item"
+          [class.dragging]="i === draggedIndex" [@slideAnimation]="i === draggedIndex ? 'dragging' : 'normal'"
+          [disabled]="isDraggable">
+          <div class="chip" [matTooltip]="removeCheckName(check.name).length > 7 ? removeCheckName(check.name) : null">
+            <img src="../../../../assets/images/drop.svg" alt="">
+            <div class="check-name">{{ removeCheckName(check.name) }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- <div (click)="toggleQueryDataVisibility()" class="d-flex" *ngIf="!(data == '')">
+        <div [@iconRotate]="queryDataVisible ? 'open' : 'closed'"> <mat-icon *ngIf="queryDataVisible">
+            keyboard_double_arrow_right
+          </mat-icon>
+          <mat-icon *ngIf="!queryDataVisible">
+            keyboard_double_arrow_left
+          </mat-icon>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class="breadcrumb-container">
+      <nav>
+        <ol class="breadcrumb d-flex m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" [href]="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" [href]="routeSourceData()">{{params_staging}}</a></li>
+          <li class="breadcrumb-element" aria-current="page">{{selectedTableName | titlecase}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="container-header d-flex justify-content-center align-items-center">
+      <h4 class="mb-0">
+        <p class="subHeader">Showing Top 1000 rows</p>
+      </h4>
+      <h4 class="mb-0" [hidden]="!hideBackButton">{{data}}</h4>
+      <button [hidden]="!hideBackButton" type="button" class="btn-close dark" (click)="closeGetDataModal()"></button>
+    </div>
+    <div class="body">
+      <div class="tablePreview mx-2">
+        <div class="table d-flex">
+          <table *ngFor="let bronzeLayerTablecolumns of bronzeTablePreviewData" class="table text-center"
+            id="table" [cellSpacing]="2">
+            <thead class="table">
+              <tr>
+                <th>{{ bronzeLayerTablecolumns }}</th>
+              </tr>
+            </thead>
+            <tbody class="text-dark bg-light">
+              <tr *ngFor="let value of bronzeLayerTableData">
+                <td>{{ value[bronzeLayerTablecolumns] || '-'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

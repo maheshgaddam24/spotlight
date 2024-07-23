@@ -1,0 +1,53 @@
+@import "../../../../utilities/global.scss";
+
+.modal-content {
+  background: $white;
+  margin-right: 1rem;
+  position: $position_relative;
+  flex: 1 1 $flex_auto;
+  padding: var(--bs-modal-padding);
+  height: 600px;
+}
+
+.buttonClose {
+  margin-top: -26px;
+  justify-content: $justify_content_flex_end;
+  display: $display_flex;
+}
+
+.modal-body {
+  height: $perc_90 !important;
+}
+
+.table {
+  width: $perc_100 !important;
+  white-space: $white_space_nowrap;
+  overflow: $overflow_auto;
+  height: $perc_90 !important;
+}
+
+.table-responsive {
+  width: $perc_100 !important;
+  white-space: $white_space_nowrap;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color:$tableHead_color;
+  background-color: $tapnav_background_color;
+  tr {
+    height: 34px;
+  }
+}
+
+.table-row {
+  height: 50px !important;
+}
+
+.generateXML {
+  align-items: end;
+  display: flex;
+  justify-content: end;
+}

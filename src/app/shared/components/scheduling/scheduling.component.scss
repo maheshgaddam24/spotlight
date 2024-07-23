@@ -1,0 +1,133 @@
+@import "../../../utilities/global.scss";
+
+$unchecked-color: #fff;
+$checked-color: #007bff;
+$front-color: #000;
+$checked-font-color: #fff;
+$card_border: 1px solid #f5f5f5;
+$label_border: 1px solid #efefef;
+$box_shadow: 5px 8px 8px 0 #ccc;
+
+%button_style {
+	width: 93px;
+	height: 40px;
+	padding: 0px 20px;
+	border-radius: 20px;
+	gap: 10px;
+	border: 1px solid #2683C6;
+  }
+.card {
+	width: 99%;
+	margin: 0px auto;
+}
+
+.card_heading {
+	border-bottom: $card_border;
+}
+.form-control:focus {
+	box-shadow: none; 
+  }
+  
+.repeatsOn {
+	list-style: none;
+	display: flex;
+	padding: 0px;
+	margin: 0px;
+}
+.invalid-input {
+	border-color: red;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 50%;
+}
+.day-input:checked~.day-label {
+	/* Checked style  */
+	background-color: $checked-color;
+	color: $checked-font-color;
+	backface-visibility: hidden;
+	transform: rotateY(360deg);
+}
+
+.day-label {
+	/* Unchecked style  */
+	background-color: $unchecked-color;
+	color: $front-color;
+	padding: 5px $px_10;
+	cursor: pointer;
+	user-select: none;
+	border-radius: 4px;
+	display: inline-block;
+	margin: 0 $px_10 $px_10 0;
+	backface-visibility: hidden;
+	transition: all 0.6s ease;
+	border: $label_border;
+	margin: $px_5;
+	box-shadow: $box_shadow;
+	width: 110px;
+	text-align: center;
+	height: -webkit-fill-available;
+	line-height: $px_30;
+	margin: 0px $px_10 0px 0px;
+}
+
+.day-input {
+	position: absolute;
+	left: -$full_width;
+}
+
+.day-label:hover {
+	scale: 1.02;
+	transition: 200ms ease;
+	box-shadow: 1px $px_10 25px rgba(0, 0, 0, .15);
+}
+
+.select_repeat {
+	margin: 0px;
+	margin-right: auto;
+}
+
+.form-group {
+	input {
+		width: 340px;
+	}
+}
+
+.form-select {
+	width: 340px !important;
+}
+
+.mat-mdc-slider.mat-primary {
+    --mdc-slider-handle-color: rgb(120, 120, 120);
+    --mdc-slider-focus-handle-color: rgb(120, 120, 120);
+    --mdc-slider-hover-handle-color:  rgb(120, 120, 120);
+    --mdc-slider-active-track-color: rgb(120, 120, 120);
+    --mdc-slider-inactive-track-color: rgb(120, 120, 120);
+    --mdc-slider-with-tick-marks-active-container-color: #fff;
+    --mdc-slider-with-tick-marks-inactive-container-color:  rgb(120, 120, 120);
+    --mat-mdc-slider-ripple-color: rgb(120, 120, 120);
+    --mat-mdc-slider-hover-ripple-color: rgba(103, 58, 183, 0.05);
+    --mat-mdc-slider-focus-ripple-color: rgba(103, 58, 183, 0.2);
+}
+
+.text-center {
+	padding: 10px;
+}
+
+.perc {
+	padding: 0 10px !important;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.create-button {
+	@extend %button_style;
+	background-color: #2683c6;
+	color: #fff;
+	width: fit-content;
+  }

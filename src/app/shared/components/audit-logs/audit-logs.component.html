@@ -1,0 +1,136 @@
+<div class="audit-logs">
+    <div class="text-end d-flex justify-content-between p-1">
+        <div>
+            <button *ngIf="exportReport && exportFullAudit" class="export" mat-raised-button data-bs-dismiss="offcanvas"
+                aria-label="Close" (click)="openDialog('0ms', '0ms'); closeCreateProjectModal()" mat-raised-button
+                style="color: black">
+                Export
+            </button>
+            <div *ngIf="!(exportReport && exportFullAudit)" class="sample-text">logs</div>
+            <div *ngIf="!(exportReport && exportFullAudit)" class="sample-text2">{{layer_name}}</div>
+        </div>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
+            (click)="closeCreateProjectModal()"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div [hidden]="hideFetchingTablesText" id="loading-bar-spinner" class="spinner">
+            <div class="spinner-icon"></div>
+        </div>
+        <div [hidden]="HideLogsText" class="noLogText">
+            <h2>{{ "project.auditLogs.no_logs" | translate }}</h2>
+        </div>
+        <div class="card" *ngFor="let value of auditLogs; let i = index">
+            <!-- <ul id="first-list">
+                <li>
+                    <span></span>
+                    <div class="time">
+                        <span>{{ value.CREATED_AT  | timezoneDate:'medium':'UTC'  }}</span>
+                    </div>
+                    <div class="title d-flex justify-content-between">
+                        {{ value.LAYER }}
+                        <span class="justify-content-end" [class.green]="value.STATUS == 'Success'"
+                            [class.red]="value.STATUS == 'Failed'">
+                            {{ value.STATUS }}</span>
+                    </div>
+                    <div class="info"><b>Operation:</b> {{ value.OPERATION }}</div>
+                    <div class="info"><b>Message:</b> {{ value.MESSAGE }}</div>
+                    <div class="statusName">
+                        <div class="d-flex flex-column">
+                            <div class="info record-count" *ngFor="let key of auditKeys[i]">
+                                {{ key }} :
+                                {{ value.RECORD_COUNT[key] }}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul> -->
+
+            <div class="audit">
+                <div class="row">
+                    <div class="d-flex status-info">
+                        <div class="heading">{{ value.CREATED_AT | timezoneDate:'medium':'UTC' }}</div>
+                        <div class="badge" [class.badgeGreen]="value.STATUS == 'Success'"
+                            [class.badgeRed]="value.STATUS == 'Failed'">
+                            <div class="text" [class.green]="value.STATUS == 'Success'"
+                                [class.red]="value.STATUS == 'Failed'">{{ value.STATUS }}</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="frame-49">
+                    <div class="number-and-badge" *ngIf="view === 'full'">
+                        <div class="badgeLayer">
+                            <svg class="icon" width="12" height="12" viewBox="0 0 22 22" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M1 10.9996L10.6422 15.8207C10.7734 15.8863 10.839 15.9191 10.9078 15.932C10.9687 15.9434 11.0313 15.9434 11.0922 15.932C11.161 15.9191 11.2266 15.8863 11.3578 15.8207L21 10.9996M1 15.9996L10.6422 20.8207C10.7734 20.8863 10.839 20.9191 10.9078 20.932C10.9687 20.9434 11.0313 20.9434 11.0922 20.932C11.161 20.9191 11.2266 20.8863 11.3578 20.8207L21 15.9996M1 5.99958L10.6422 1.17846C10.7734 1.11287 10.839 1.08008 10.9078 1.06717C10.9687 1.05574 11.0313 1.05574 11.0922 1.06717C11.161 1.08008 11.2266 1.11287 11.3578 1.17846L21 5.99958L11.3578 10.8207C11.2266 10.8863 11.161 10.9191 11.0922 10.932C11.0313 10.9434 10.9687 10.9434 10.9078 10.932C10.839 10.9191 10.7734 10.8863 10.6422 10.8207L1 5.99958Z"
+                                    stroke="#039855" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                        </div>
+                        <div class="number"> {{ layerChange(value.LAYER) }}</div>
+                    </div>
+                    <div class="number-and-badge">
+                        <div class="badge2">
+                            <svg class="icon" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M6.6991 0.541377C6.90271 0.629762 7.02368 0.841796 6.99614 1.06205L6.5664 4.50003H10.5C10.694 4.50003 10.8705 4.61226 10.9528 4.78795C11.0351 4.96364 11.0083 5.17108 10.8841 5.32012L5.88412 11.3201C5.74202 11.4906 5.50452 11.5471 5.30091 11.4587C5.0973 11.3703 4.97634 11.1583 5.00387 10.938L5.43361 7.50003H1.50001C1.306 7.50003 1.1295 7.3878 1.04721 7.21211C0.964921 7.03641 0.991694 6.82898 1.1159 6.67994L6.1159 0.679936C6.25799 0.509419 6.49549 0.452993 6.6991 0.541377ZM2.56753 6.50003H6.00001C6.14342 6.50003 6.27993 6.56161 6.37485 6.66913C6.46976 6.77664 6.51393 6.91974 6.49614 7.06205L6.20768 9.3698L9.43248 5.50003H6.00001C5.85659 5.50003 5.72008 5.43845 5.62517 5.33093C5.53025 5.22341 5.48608 5.08032 5.50387 4.93801L5.79234 2.63026L2.56753 6.50003Z"
+                                    fill="#DCF2FE" />
+                            </svg>
+                        </div>
+                        <div class="number"> {{ value.OPERATION }}</div>
+                    </div>
+                    <div class="number-and-badge">
+                        <div class="badge3">
+                            <svg class="icon2" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M3.5 4.25H6M3.5 6H7.5M3.5 9V10.1678C3.5 10.4342 3.5 10.5674 3.55461 10.6358C3.60211 10.6953 3.67413 10.7299 3.75027 10.7298C3.83781 10.7297 3.94184 10.6465 4.14988 10.4801L5.34261 9.52592C5.58626 9.33099 5.70808 9.23353 5.84374 9.16423C5.9641 9.10274 6.09221 9.0578 6.22461 9.03063C6.37383 9 6.52985 9 6.84187 9H8.1C8.94008 9 9.36012 9 9.68099 8.83651C9.96323 8.6927 10.1927 8.46323 10.3365 8.18099C10.5 7.86012 10.5 7.44008 10.5 6.6V3.9C10.5 3.05992 10.5 2.63988 10.3365 2.31901C10.1927 2.03677 9.96323 1.8073 9.68099 1.66349C9.36012 1.5 8.94008 1.5 8.1 1.5H3.9C3.05992 1.5 2.63988 1.5 2.31901 1.66349C2.03677 1.8073 1.8073 2.03677 1.66349 2.31901C1.5 2.63988 1.5 3.05992 1.5 3.9V7C1.5 7.46499 1.5 7.69748 1.55111 7.88823C1.68981 8.40587 2.09413 8.81019 2.61177 8.94889C2.80252 9 3.03501 9 3.5 9Z"
+                                    stroke="#3D4459" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="number">
+                            {{ value.MESSAGE }}
+                        </div>
+                    </div>
+                    <div class="number-and-badge">
+                        <div class="badge3">
+                            <svg class="coins-stacked-01" width="12" height="12" viewBox="0 0 25 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5 17C12.5 19.7614 14.7386 22 17.5 22C20.2614 22 22.5 19.7614 22.5 17C22.5 14.2386 20.2614 12 17.5 12C14.7386 12 12.5 14.2386 12.5 17ZM12.5 17C12.5 15.8742 12.8721 14.8353 13.5 13.9995V5M12.5 17C12.5 17.8254 12.7 18.604 13.0541 19.2901C12.2117 20.0018 10.2658 20.5 8 20.5C4.96243 20.5 2.5 19.6046 2.5 18.5V5M13.5 5C13.5 6.10457 11.0376 7 8 7C4.96243 7 2.5 6.10457 2.5 5M13.5 5C13.5 3.89543 11.0376 3 8 3C4.96243 3 2.5 3.89543 2.5 5M2.5 14C2.5 15.1046 4.96243 16 8 16C10.189 16 12.0793 15.535 12.9646 14.8618M13.5 9.5C13.5 10.6046 11.0376 11.5 8 11.5C4.96243 11.5 2.5 10.6046 2.5 9.5"
+                                    stroke="#039855" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div *ngIf="layerChange(value.LAYER) === 'Raw scheduler' && !(value.STATUS == 'Failed') " class="number">
+                            <div  class="info record-count" *ngFor="let key of auditKeys[i]">
+                                {{ key || "-" }} :
+                                {{ value.RECORD_COUNT[key] || "-" }}
+                            </div>
+                        </div>
+                        <div *ngIf="layerChange(value.LAYER) === 'Refined scheduler'"  class="number">
+                            <div class="info record-count" >
+                                {{ value.TABLE_NAME || "-" }} :
+                                {{ value.RECORD_COUNT || "-" }}
+                            </div>
+                        </div>
+                        <div *ngIf="layerChange(value.LAYER) === 'Raw scheduler' && value.STATUS == 'Failed'"  class="number">
+                            <div class="info record-count" >
+                                {{ value.TABLE_NAME || "-" }} :
+                                {{ value.RECORD_COUNT || "-" }}
+                            </div>
+                        </div>
+                        <div *ngIf="layerChange(value.LAYER) === 'Report scheduler' && !(value.STATUS == 'Failed') " class="number">
+                            <div  class="info record-count" *ngFor="let key of auditKeys[i]">
+                                {{ key || "-" }} :
+                                {{ value.RECORD_COUNT[key] || "-" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

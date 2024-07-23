@@ -1,0 +1,148 @@
+/* colors */
+$black: #000000;
+$white: #ffffff;
+$tableHead_color: #929292;
+$tableData_color: #a1a9b8;
+$tapnav_background_color: #ffffff;
+$title_color: rgba(0, 0, 0, 0.301);
+$border_color: #c2c2c2;
+$body_background_color: #f1f1f1;
+$dropDown_background_color: #e4e4e4;
+$border_left_color: #befbff;
+$border_bottom_color: rgb(32, 30, 30);
+
+/* fonts */
+$poppins_font: "Poppins";
+$inter_font: "Inter";
+$roboto_font: "Roboto";
+$arial_font: Arial, sans-serif;
+$varela_round: "Varela Round";
+$montserrat: "Montserrat";
+
+/* text styles */
+$text_align_center: center;
+$text_align_end: end;
+$text_align_left: left;
+$white_space_nowrap: nowrap;
+
+/* pixels */
+$px_3: 3px;
+$px_5: 5px;
+$px_8: 8px;
+$px_10: 10px;
+$px_12: 12px;
+$px_13: 13px;
+$px_14: 14px;
+$px_15: 15px;
+$px_16: 16px;
+$px_18: 18px;
+$px_20: 20px;
+$px_21: 21px;
+$px_22: 22px;
+$px_24: 24px;
+$px_30: 30px;
+$px_36: 36px;
+$px_38: 38px;
+$px_40: 40px;
+$px_45: 45px;
+$px_50: 50px;
+$px_60: 60px;
+$px_70: 70px;
+$px_75: 75px;
+$px_80: 80px;
+$px_90: 90px;
+$px_95: 95px;
+$px_100: 100px;
+$px_150: 150px;
+
+$perc_100: 100%;
+$perc_95: 95%;
+$perc_90: 90%;
+$perc_80: 80%;
+$perc_75: 75%;
+$perc_70: 70%;
+$perc_60: 60%;
+$perc_50: 50%;
+$perc_40: 40%;
+$perc_30: 30%;
+$perc_25: 25%;
+$perc_20: 20%;
+
+/* font styling */
+$font_size_11: 11px;
+$font_size_12: 12px;
+$font_size_13: 13px;
+$font_size_14: 14px;
+$font_size_15: 15px;
+$font_size_16: 16px;
+$font_size_17: 17px;
+$font_size_18: 18px;
+$font_size_20: 20px;
+$font_size_24: 24px;
+$font_size_30: 30px;
+$font_size_45: 45px;
+$font_weight_300: 300;
+$font_weight_400: 400;
+$font_weight_500: 500;
+$font_weight_600: 600;
+$font_weight_900: 900;
+$font_weight_bolder: bolder;
+
+/* width & height */
+$full_width: 100vw;
+$full_height: 100vh;
+$container_height: calc(100vh - 60px);
+$container_header_height: 50px;
+$body_height: calc(100vh - 199px);
+$card_width: 480px;
+$card_height: 480px;
+$form_control_width: 300px;
+$max_content: max-content;
+
+/* display styling */
+$display_flex: flex;
+$display_none: none;
+$display_block: block;
+$display_inline_block: inline-block;
+$justify_content_center: center;
+$justify_content_flex_end: flex-end;
+$justify_content_space_between: space-between;
+$align_items_center: center;
+$align_items_flex_start: flex-start;
+$flex_auto: auto;
+$flex_direction_row: row;
+
+/* backgound styling */
+$background_size_cover: cover;
+$background_repeat: no-repeat;
+$background_position: center center;
+$background_attachment: fixed;
+$background_clip: padding-box;
+$background_none: none;
+$box_sizing: border-box;
+
+/* position styling */
+$position_relative: relative;
+$position_absolute: absolute;
+
+/* cursor styling */
+$cursor_pointer: pointer;
+$cursor_move: move;
+$pointer_events_auto: auto;
+$cursor_not_allowed: not-allowed;
+
+/* border styling */
+$border_none: none;
+$border_solid: solid;
+$border_dashed: dashed;
+$table_border: 1px solid #dee2e6;
+
+$transparent: transparent;
+$none: none;
+
+$overflow_auto: auto;
+$overflow_hidden: hidden;
+
+$vertical_align_top: top;
+
+$list_style_none: none;

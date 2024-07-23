@@ -1,0 +1,39 @@
+@import "../../../utilities/global.scss";
+
+.modal {
+    position: $position_relative;
+}
+
+.body {
+    padding: $px_10;
+}
+
+.close {
+    position: $position_absolute;
+    top: -36px;
+    right: -28px;
+    background: $background_none;
+    border: $border_none;
+
+    span {
+        font-size: 31px;
+        font-weight: $font_weight_bolder;
+        color: $white;
+    }
+}
+
+.warning {
+    margin: $px_15 $px_10;
+}
+
+.save {
+    margin: $px_24 0 $px_10 0;
+}
+
+.btn-light {
+    background: $tableHead_color;
+}
+
+.confirm {
+    margin-left: $px_10;
+}

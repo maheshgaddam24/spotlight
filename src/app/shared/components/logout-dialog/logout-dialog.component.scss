@@ -1,0 +1,219 @@
+.delete-project,
+.delete-project * {
+  box-sizing: border-box;
+}
+.delete-project {
+  background: var(--white, #ffffff);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 420px;
+  position: relative;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.row {
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 429px;
+  position: relative;
+}
+.close {
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  position: relative;
+}
+.ellipse-2 {
+  background: #d9d9d9;
+  border-radius: 50%;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 0%;
+  top: 0%;
+  height: 100%;
+}
+.close2 {
+  position: absolute;
+  right: 25%;
+  left: 25%;
+  width: 50%;
+  bottom: 25%;
+  top: 25%;
+  height: 50%;
+}
+.u-multiply {
+  height: auto;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 0%;
+  top: 0%;
+  height: 100%;
+  overflow: visible;
+}
+.row2 {
+  padding: 16px 24px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.text {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 320px;
+  position: relative;
+}
+.sample-text {
+  color: #000000;
+  text-align: left;
+  font: var(--heading-3, 700 20px/26px "Montserrat-Bold", sans-serif);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.text2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.sample-text2 {
+  color: #000000;
+  text-align: left;
+  font: var(--content-2, 400 16px/20px "VarelaRound-Regular", sans-serif);
+  position: relative;
+  align-self: stretch;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.row3 {
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.holder {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.button-regular {
+  background: var(--white, #ffffff);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--blue-1, #2683c6);
+  border-width: 1px;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.placeholder {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 53px;
+  height: 40px;
+  position: relative;
+}
+.button {
+  color: var(--blue-1, #2683c6);
+  text-align: center;
+  font: var(--content-2, 400 16px/20px "VarelaRound-Regular", sans-serif);
+  position: relative;
+  width: 53px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button-regular2 {
+  background: var(--blue-1, #2683c6);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--blue-1, #2683c6);
+  border-width: 1px;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.placeholder2 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 40px;
+  position: relative;
+}
+.button2 {
+  color: var(--white, #ffffff);
+  text-align: center;
+  font: var(--content-2, 400 16px/20px "VarelaRound-Regular", sans-serif);
+  position: relative;
+  width: 53px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep.modal-content {
+  width: 84%;
+}

@@ -1,0 +1,41 @@
+<div class="modal-content">
+    <div class="header">
+        <h5 class="modal-title" id="modalTitle">
+            {{ data.table_name }}
+        </h5>
+        <div class="buttonClose">
+            <button type="button" class="btn-close" (click)="closeGetDataModal()"></button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="table my-3">
+            <table class="table-responsive text-center">
+                <thead>
+                    <tr>
+                        <th>Columns from the table</th>
+                        <th></th>
+                        <th>Columns from the XSD file</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-row" *ngFor="let column of xsdColumns; let i = index">
+                        <td>
+                            <select id="selectedOption-{{ i }}">
+                                <option disabled selected>Select</option>
+                                <option *ngFor="let col of tableColumns" value="{{col}}" [selected]="col===column">
+                                    {{ col }}
+                                </option>
+                            </select>
+                        </td>
+                        <td><---------></td>
+                        <td><input value="{{column}}" id="{{i}}-xsdCol"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="generateXML">
+            <button class="btn btn-dark  " (click)="GenerateXML()">Generate</button>
+        </div>
+    </div>
+</div>

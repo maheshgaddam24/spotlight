@@ -1,0 +1,74 @@
+<div style="height: 100%;">
+  <mat-dialog-content class="mat-typography" style="height: 80%;">
+    <div class="d-flex" style="    width: 44vw;
+    background-color: #ffa5008f;
+    padding: 7px;
+    margin-bottom: 14px;
+    border-radius: 8px;">
+      <div style="display: flex; align-items: center; margin-right: 6px;">
+        <i class="fa fa-exclamation-circle" style="font-size: 24px; color: white;"></i>
+      </div>
+      <div>
+        <strong>Note:</strong>
+        <p style="color: rgb(15, 15, 15);" class="m-0"> 
+          Initially it will be full load.For the next workflow run, if you require the incremental load, select the
+          primary column to move forward.
+        </p>
+      </div>
+    </div>
+
+    <form [formGroup]="formGroup">
+      <div class="transparent-table list-container">
+        <div class="items">
+          <table>
+            <thead>
+              <tr>
+                <th>Table</th>
+                <th>Load type</th>
+                <th>Columns</th> <!-- New column for dropdown -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tableNames; let i = index">
+                <td>
+                  {{ item.split('.')[0] }}
+                  <strong>{{ item.split('.')[1] }}</strong>
+                </td>
+                <td>
+                  <input type="radio" [formControlName]="'loadType' + i" value="full" [checked]="true"
+                    (change)="resetColumns(i)" />
+                  Full
+                  <input type="radio" [formControlName]="'loadType' + i" value="incremental"
+                    (change)="resetColumns(i)" />
+                  Incremental
+                </td>
+                <td class="m-0 p-0" *ngIf="formGroup.get('loadType' + i)?.value === 'incremental'">
+                  <mat-form-field style="margin-top: 5px;">
+                    <mat-label>Select a column</mat-label>
+                    <mat-select [formControlName]="'columns' + i">
+                      <mat-option *ngFor="let column of getColumnNames(item)" [value]="column">
+                        {{ column }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" style="height: 20%">
+    <div class="buttons d-flex justify-content-between">
+      <button class="btn btn-dark backButton" mat-dialog-close="" type="button">
+        {{ "close" | translate }}
+      </button>
+      <button class="btn btn-dark" [disabled]="isLoading" type="button" (click)="table()">
+        <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading}"></i> {{ button }}
+      </button>
+      <hr>
+    </div>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,96 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class="breadcrumb-container">
+      <nav>
+        <ol class="breadcrumb d-flex m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" (click)="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li class="breadcrumb-element" aria-current="page"><a class="routeData"  (click)="routeGoldLayer()">{{redirectLayerName}}</a></li>
+          <li class="breadcrumb-element">{{selectedGoldLayerTableName_title | titlecase}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="container-header d-flex justify-content-between align-items-center px-4 py-3" >
+      <div  class="header-name mb-0 title d-flex">{{ selectedGoldLayerTableName_title }}<p
+          *ngIf="(this.dataPreview === 'eliminatedData' || this.dataDisplayingTable==='error_data')" class="m-0 eliminated-title">(Eliminated Records)</p>
+      </div>
+      <div *ngIf="!(this.dataPreview === 'silverLayerData' || this.dataPreview === 'goldLayerData')" class="buttons-container">
+        <input  class="filter mx-3" matInput (keyup)="applyFilter($event)" placeholder="Search" #input />
+        <!-- <button class="insights-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight" >
+
+        </button> -->
+        <div *ngIf="!(this.dataPreview === 'eliminatedData')" class="text-link" (click)=" export()">
+          <div class="graph">
+            <svg class="group" width="16" height="16" viewBox="0 0 16 16" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.5287 4.19533L14.4713 5.138L10.6667 8.94267L8.66667 6.94333L5.80467 9.80467L4.862 8.862L8.66667 5.05733L10.6667 7.05667L13.5287 4.19533Z"
+                fill="#2683C6" />
+            </svg>
+          </div>
+          <div class="button"> {{"query-builder.exportButton" | translate}}</div>
+        </div>
+
+
+      </div>
+      <div *ngIf="(this.dataPreview === 'silverLayerData' || this.dataPreview === 'goldLayerData'  )" class="buttons-container">
+        <div class="filter-radio d-flex justify-content-between">
+          <label class="radio-label">
+              <input class="radio-button" type="radio" [(ngModel)]="dataDisplayingTable" value="result_data"
+                  (ngModelChange)="toggleErrorQueueRecords($event)" checked>
+              <div class="d-flex gap-1">Resultant Records <p class="m-0 p-0"  matTooltipPosition="below" matTooltip="Resultant count">({{resultantCount}})</p></div>
+          </label>
+          <label class="radio-label">
+              <input class="radio-button" type="radio" [(ngModel)]="dataDisplayingTable" value="error_data"
+                  (ngModelChange)="toggleErrorQueueRecords($event)">
+              <div class="d-flex gap-1" >Error Queue Records <p class="m-0 p-0"  matTooltipPosition="below" matTooltip="Error Queue count">({{errorCount}})</p></div>
+          </label>
+      </div>
+      </div>
+    </div>
+
+    <div class="body d-flex" >
+      <div class="table">
+        <table mat-table #table [dataSource]="goldLayerTableColumnsData">
+          <ng-container matColumnDef="checkbox">
+            <th mat-header-cell *matHeaderCellDef class="header-check-box"></th>
+            <td mat-cell *matCellDef="let row" class="check-box">
+              <mat-checkbox *ngIf="!(this.dataPreview === 'eliminatedData')" (click)="$event.stopPropagation()"
+                (change)="$event ? exportSelectionColumns.toggle(row) : null"
+                [checked]="exportSelectionColumns.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container [matColumnDef]="columnName" *ngFor="let columnName of columnsOfTable">
+            <th [hidden]="columnName.includes(excludedColumn)" class="thead" mat-header-cell *matHeaderCellDef>
+              {{ columnName }}
+            </th>
+            <td [hidden]="columnName.includes(excludedColumn)" mat-cell *matCellDef="let row">{{ row[columnName] || '-'
+              }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="selectedGoldLayerTableColumnsData; sticky: true" ></tr>
+          <tr mat-row *matRowDef="let row; columns: selectedGoldLayerTableColumnsData"
+          [ngStyle]="{ 'background-color': dataDisplayingTable === 'error_data' ? '#FFDFDF' : '' }">
+      </tr>
+      
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No data matching the filter 
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

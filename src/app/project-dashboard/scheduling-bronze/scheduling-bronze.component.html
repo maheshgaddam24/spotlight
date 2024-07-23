@@ -1,0 +1,22 @@
+<div mat-dialog-content>
+    <app-scheduling (childButtonEvent)="repeatMode($event)" (dayNameButtonEvent)="dayName($event)"
+        (dateTimeButtonEvent)="dateTime($event)" (timeButtonEvent)="time($event)" (selectedMin)="getMin($event)"
+        (driftDataValue)='driftDataValue($event)'></app-scheduling>
+        <!-- <div class=" eventCheckBox d-flex  justify-content-end"><label>
+            <input  type="checkbox" [(ngModel)]="checked"> Event based triggering
+          </label></div> -->
+          
+    </div>
+<div mat-dialog-actions align="end">
+    <div class="buttons">
+        <button type="submit" mat-dialog-close  class="clear-button" >
+          {{"Cancel" | translate}}
+        </button>
+        <div class="d-flex">
+          
+          <button type="submit"  [disabled]="disableButton()"  (click)="submitScheduling()" class="create-button">
+            {{"saveButton" | translate}}
+          </button>
+        </div>
+      </div>
+</div>

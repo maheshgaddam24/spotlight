@@ -1,0 +1,297 @@
+@import "../../../utilities/global.scss";
+@import url(https://fonts.googleapis.com/css?family=Roboto:500,700);
+
+%button_styling {
+  height: 32px;
+  padding: 0px 20px;
+  border-radius: 20px;
+  border: 1px solid #2683C6;
+  font-family: $varela_round;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.container-body {
+  height: $perc_100;
+  display: block;
+  padding: 0 3px !important;
+}
+
+.header {
+  padding: 1rem;
+}
+
+.table-list {
+  height: $perc_100;
+}
+
+.buttonClose {
+  margin-top: -26px;
+  justify-content: $justify_content_flex_end;
+  display: $display_flex;
+}
+
+.table-responsive {
+  height: 65vh;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px 0px #1D212D14;
+}
+
+.table-responsive thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: white;
+}
+
+.table-responsive input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.table th {
+  padding: 8px;
+  font-family: $inter_font;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  color: #5D6C87;
+  background: #F5F8FA;
+}
+
+.table td {
+  padding: 8px;
+  font-family: $varela_round;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #3D4459;
+}
+
+tbody {
+  cursor: $cursor_pointer;
+}
+
+.checkbox {
+  display: flex !important;
+  align-items: center;
+  height: 31px !important;
+}
+
+.next-button {
+  @extend %button_styling;
+  background: #2683C6;
+  color: $white !important;
+}
+
+.cancel-button {
+  @extend %button_styling;
+  background: $white;
+  color: #2683C6;
+}
+
+.transparent-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.transparent-table th,
+.transparent-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.transparent-table th:first-child,
+.transparent-table td:first-child {
+  width: 20px;
+}
+
+.transparent-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #f5f5f5;
+}
+
+.fetchingText {
+  display: $display_flex;
+  align-items: $align_items_center;
+  justify-content: $justify_content_center;
+  position: relative;
+  top: 35%;
+}
+
+.tableName {
+  margin: $px_3 0px $px_3 $px_10;
+  font-size: $font_size_14;
+  font-weight: $font_weight_400;
+}
+
+
+
+.backButton {
+  margin-right: 8px;
+}
+
+#loading-bar-spinner.spinner {
+  left: 50%;
+  margin-left: -20px;
+  top: 50%;
+  margin-top: -20px;
+  position: absolute;
+  z-index: 19 !important;
+  animation: loading-bar-spinner 400ms linear infinite;
+}
+
+#loading-bar-spinner.spinner .spinner-icon {
+  width: 40px;
+  height: 40px;
+  border: solid 4px transparent;
+  border-top-color: #121313 !important;
+  border-left-color: #1c1d1d !important;
+  border-radius: 50%;
+}
+
+@keyframes loading-bar-spinner {
+  0% {
+    transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+//New list view
+.list-container {
+  max-width: 100%;
+  margin: 0 auto;
+  user-select: none;
+  color: #000000;
+  // font: 500 1.2em/1.2 'Roboto', sans-serif;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  counter-reset: done-items undone-items;
+}
+
+/* hide inputs offscreen, but at the same vertical positions as the correpsonding labels, so that tabbing scrolls the viewport as expected */
+input[type="checkbox"] {
+  display: block;
+  height: 48px;
+  order: 4;
+  -webkit-order: 4;
+  outline: none;
+  counter-increment: undone-items;
+}
+
+input[type="checkbox"]:checked {
+  order: 3;
+  -webkit-order: 3;
+  counter-increment: done-items;
+}
+
+label {
+  display: block;
+  position: relative;
+  padding: 10px 0 10px 38px;
+  order: 4;
+  -webkit-order: 4;
+  cursor: pointer;
+  animation: undone 0.5s;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+label::before {
+  content: "";
+  /* circle outline */
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 1em;
+  font-family: "Font Awesome 5 Free";
+  border-radius: 50%;
+}
+
+input[type="checkbox"]:checked+label {
+  order: 2;
+  -webkit-order: 2;
+  animation: done 0.5s;
+}
+
+input:checked+label::before {
+  content: "\f058";
+  /* circle checkmark */
+  font-family: "Font Awesome 5 Free";
+}
+
+.done {
+  order: 1;
+  -webkit-order: 1;
+}
+
+.done::after {
+  content: " (" counter(done-items) ")";
+}
+
+.undone {
+  order: 3;
+  -webkit-order: 3;
+}
+
+.undone::after {
+  content: " (" counter(undone-items) ")";
+}
+
+@keyframes done {
+  0% {
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(20px);
+  }
+
+  50% {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@keyframes undone {
+  0% {
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-20px);
+  }
+
+  50% {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@media screen and (min-width: 1729px) {
+  .table-responsive {
+    height: 73vh !important;
+  }
+
+}

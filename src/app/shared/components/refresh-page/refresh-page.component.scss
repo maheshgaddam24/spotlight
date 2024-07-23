@@ -1,0 +1,41 @@
+.refresh-content {
+    padding: 9px 28px;
+    background-color: #e57373;
+    color: white;
+    border-radius: 25px;
+}
+
+.refresh-content a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    line-height: 29px;
+    letter-spacing: 1px;
+}
+
+.vr {
+    display: inline-block;
+    align-self: stretch;
+    width: 2px;
+    min-height: 1em;
+    background-color: currentcolor;
+    opacity: 0.75;
+}
+
+.refresh-container {
+    margin-top: 5%;
+}
+
+a.hover:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -80px;
+    position: relative;
+}

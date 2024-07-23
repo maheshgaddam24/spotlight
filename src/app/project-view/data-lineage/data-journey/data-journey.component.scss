@@ -1,0 +1,230 @@
+@import "../../../../app/utilities/global.scss";
+
+%font_style_montserrat {
+    font-family: $montserrat;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+%font_style_varela {
+    font-family: $varela_round;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #475467;
+}
+
+%status_style {
+    width: 80px;
+    height: 24px;
+    padding: 5px 6px;
+    border-radius: 4px;
+    border: 1px solid #FFFFFF;
+    font-family: $inter_font;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: -0.006em;
+    text-align: center;
+}
+
+.data-journey-container {
+    width: $perc_100;
+    height: 72vh;
+    gap: 24px;
+}
+
+.data-details {
+    height: $perc_100;
+    width: 99vw;
+    padding: 24px;
+    gap: 16px;
+    border-radius: 12px;
+    border: 1px solid #EAECF0;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0588235294);
+}
+
+mat-icon {
+    cursor: pointer;
+}
+
+.chart-header {
+    font-family: $montserrat;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.run-time {
+    @extend %font_style_varela;
+    gap: 40px;
+}
+
+.display-time {
+    width: fit-content;
+}
+
+.last-run {
+    @extend %font_style_montserrat;
+    color: #C8C8C8;
+}
+
+.next-run {
+    @extend %font_style_montserrat;
+    color: #039855;
+}
+
+.execution-summary {
+    gap: 8px;
+    @extend %font_style_varela;
+}
+
+.action-text {
+    @extend %font_style_varela;
+}
+
+.task-count {
+    @extend %font_style_montserrat;
+    color: #3D4459;
+}
+
+.failed-task {
+    color: #D92D20;
+}
+
+.cards {
+    align-items: center;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 80vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 305px;
+    height: 105px;
+    margin: 5px;
+    padding: 16px;
+    border-radius: 12px;
+    gap: 16px;
+    border: 1px solid #039855;
+    box-shadow: 0px 1px 2px 0px #1018280f;
+}
+
+.card.queued {
+    border-color: rgba(0, 0, 0, 0.363);
+}
+.card.running {
+    animation: blink 3s infinite; 
+}
+.card.failed {
+    border-color: rgba(207, 25, 25, 0.685);}
+
+
+@keyframes blink {
+    0%, 100% {
+        border-color: rgba(255, 166, 0, 0.747); 
+    }
+    50% {
+        border-color: transparent; 
+    }
+}
+
+.card.active {
+    height: 100%;
+}
+.card:not(.running):not(.queued):hover {
+    border: 1px solid  #34ec71;
+    box-shadow: 0px 1px 2px 0px  #88f1ab;
+}
+.card-head {
+    height: 48px;
+    gap: 24px;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    background: linear-gradient(0deg, #d1fadf, #d1fadf),
+        linear-gradient(0deg, #ecfdf3, #ecfdf3);
+    border: 8px solid #ecfdf3;
+    border-radius: 28px;
+}
+
+.image {
+    width: 24px;
+    height: 24px;
+    top: 28px;
+    left: 28px;
+    padding: 2px 3px;
+    position: absolute;
+    filter: opacity(1);
+}
+
+.card-title {
+    font-family: $montserrat;
+    font-size: 16px;
+    line-height: 5px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #475467;
+}
+
+.card-body {
+    height: 84px;
+    gap: 16px;
+}
+
+.card-desc {
+    font-family: $varela_round;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.arrow {
+    height: 12px;
+    width: 40px;
+    position: relative;
+    top: 45%;
+    filter: opacity(1);
+}
+.refresh-icon {
+    height: 24px;
+}
+
+.succ-bg {
+    @extend %status_style;
+    background: linear-gradient(0deg, #D6FC92, #D6FC92),
+        linear-gradient(0deg, #FFFFFF, #FFFFFF);
+    color: #235C04;
+}
+
+.running-bg {
+    background-color: rgba(255, 170, 51, 0.431372549);
+    color: brown;
+    @extend %status_style;
+}
+
+.failed-bg {
+    background-color: #ffd1dc;
+    color: #8c3f54;
+    @extend %status_style;
+}
+.queued-bg{
+    background-color: #e7dddf;
+    color: #1b1919;
+    @extend %status_style;
+}

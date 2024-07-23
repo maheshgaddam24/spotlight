@@ -1,0 +1,93 @@
+<div class="card">
+	<div class="card-body">
+		<div class="schedulingContainer">
+			<div class="row card_heading">
+				<div class="col-12">
+					<h5 class="text-center py-2">{{"scheduling.heading" | translate}}</h5>
+				</div>
+			</div>
+			<div class="row px-3 py-3">
+				<div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
+					<p class="m-0">{{"scheduling.repeats" | translate}}</p>
+				</div>
+				<div class="col-lg-10 col-sm-12 col-md-12 col-xs-12">
+					<div class="d-flex">
+						<div><select class="form-select select_repeat" name="selectedRepeatMode"
+								[(ngModel)]="selectedRepeatMode" (change)="selectedRepeat($event)">
+								<option class="dropdown-item" disabled selected value="undefined">
+									{{"scheduling.selectRepMode" |
+									translate}}</option>
+								<option class="dropdown-item" *ngFor="let repeat of repeatPeriod"
+									value="{{repeat.viewValue}}">
+									{{repeat.viewValue}}</option>
+							</select></div>
+						<div class="row px-3" *ngIf="repeatMode == 'Minutes'">
+							<div class="input-group">
+								<input type="text" [(ngModel)]="selectedMinutes" class="form-control"
+									(input)="validateInput($event)" maxlength="2"
+									[class.invalid-input]="invalidMinutes" />
+								<span class="input-group-text">mins</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row px-3 py-3" *ngIf="repeatMode == 'Weekly'">
+					<div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
+						<p class="m-0">{{"scheduling.repeatsOn" | translate}}</p>
+					</div>
+					<div class="col-lg-10 col-sm-12 col-md-12 col-xs-12">
+						<form [formGroup]="dayForm">
+							<ul class="repeatsOn">
+								<li *ngFor="let day of repeatOnDays">
+									<div class="day-form">
+										<input class="day-input" type="checkbox" id="{{day}}" value="{{day}}"
+											formControlName="day" (change)="getDayName(day, $event)">
+										<label class="day-label" for="{{day}}">
+											{{day}}
+										</label>
+									</div>
+								</li>
+							</ul>
+						</form>
+					</div>
+				</div>
+				<div class="row px-3 py-3">
+					<div class="col-lg-2 col-sm-12 col-md-12 col-xs-12 ">
+						<p class="m-0"
+							*ngIf=" repeatMode !== 'Weekly' && repeatMode !== 'Hourly'  && repeatMode !== 'Minutes'">
+							{{"scheduling.startsAt" |
+							translate}}</p>
+					</div>
+					<div class="col-lg-10 col-sm-12 col-md-12 col-xs-12">
+						<form class="form" name="databaseForm" [formGroup]="dateTime" (ngSubmit)="submitDateTime()">
+							<div class="d-flex">
+								<div class="form-group me-3"
+									*ngIf="repeatMode !== 'Daily' && repeatMode !== 'Weekly' && repeatMode !== 'Hourly' && repeatMode !== 'Hourly' && repeatMode !== 'Minutes' ">
+									<input formControlName="date" class="form-control" type="date"
+										(click)="setDateTime($event)" />
+								</div>
+								<div class="form-group "
+									*ngIf="repeatMode == 'Daily' || repeatMode == 'Monthly' || repeatMode == 'Weekly' && repeatMode !== 'Hourly' && repeatMode !== 'Minutes'  ">
+									<input formControlName="time" class="form-control" type="time"
+										(click)="setDateTime($event)" />
+								</div>
+								<button class="create-button ms-3" type="submit" ngbTooltip="{{toolTipMsg}}"
+									placement="right"
+									*ngIf="repeatMode !== 'Hourly' && repeatMode !== 'Minutes'  ">{{"scheduling.setBtn"
+									|
+									translate}}</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div *ngIf="showDriftRange" class="d-flex">
+					<h5 class="text-center py-2">Drift Range</h5>
+					<mat-slider style="width: 70%; margin-left: 80px;" min="0" max="100" showTickMarks discrete
+						[displayWith]="formatLabel" (change)="onSliderChange($event)">
+						<input matSliderThumb [(ngModel)]="value" #slider>
+					</mat-slider>
+					<h5 class="perc">{{slider.value}}%</h5>
+				</div>
+			</div>
+		</div>
+	</div>

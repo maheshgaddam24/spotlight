@@ -1,0 +1,273 @@
+@import "../utilities/global.scss";
+
+.container-fluid {
+  height: $container_height;
+  background: $white;
+}
+
+.line {
+  height: 3px;
+  background: whitesmoke;
+}
+
+.exportCsv {
+  cursor: pointer;
+}
+.text-link,
+.text-link * {
+  box-sizing: border-box;
+}
+.text-link {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+}
+.graph {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.group {
+  height: auto;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 0%;
+  top: 0%;
+  height: 100%;
+  overflow: visible;
+}
+.button {
+  color: var(--blue-1, #2683c6);
+  text-align: left;
+  font-family: var(--content-2-font-family, "VarelaRound-Regular", sans-serif);
+  font-size: var(--content-2-font-size, 16px);
+  line-height: var(--content-2-line-height, 20px);
+  font-weight: var(--content-2-font-weight, 400);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.breadcrumb-container {
+  width: 100%;
+  height: 70px;
+  padding: 16px 0px;
+  gap: 24px;
+}
+
+.breadcrumb {
+  height: 38px;
+  padding: 8px 24px;
+  gap: 12px;
+}
+
+.breadcrumb-element {
+  font-family: $varela_round;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.breadcrumb-element:not(:last-child)::after {
+  content: url("../../assets/images/breadcrumb-icon.svg");
+  margin-left: 12px;
+  color: #c9cbce;
+}
+
+.home-icon {
+  height: 18px;
+  width: 18px;
+  top: 3px;
+  position: relative;
+  vertical-align: 0;
+}
+
+.routeData {
+  text-decoration: none;
+  color: #2683c6;
+}
+
+.container-header {
+  height: 66px;
+  gap: 8px;
+}
+
+.header-name {
+  font-family: $montserrat;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.insights-button {
+  width: 139px;
+  height: 32px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #2683c6;
+  background: #2683c6;
+  gap: 4px;
+  font-family: $varela_round;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+  color: #fff;
+}
+
+.body {
+  width: $perc_100;
+  height: $body_height;
+  padding: 16px 24px 0px 24px;
+}
+
+.table {
+  width: $perc_100 !important;
+  height: $perc_100;
+  white-space: $white_space_nowrap !important;
+  overflow: $overflow_auto;
+  border: 1px solid whitesmoke;
+  border-radius: 8px;
+}
+
+thead,
+tr,
+th {
+  height: 28px !important;
+  font-family: $inter_font;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+
+.thead {
+  z-index: 1 !important;
+  color: #5D6C87;
+  background-color: #F5F8FA !important;
+}
+
+td {
+  height: 32.8px !important;
+  font-family: $inter_font;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  white-space: $white_space_nowrap;
+}
+
+.header-check-box {
+  left: 0;
+  background: #f5f8fa !important;
+}
+
+.check-box {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: $white !important;
+}
+
+.btn {
+  height: $px_40;
+}
+
+table > :not(caption) > * > * {
+  padding: 0 !important;
+}
+
+@media screen and (max-width: 1535px) {
+  .breadcrumb-container {
+    height: 50px;
+    padding: 8px 0px;
+  }
+
+  .container-header {
+    height: 54px;
+    gap: 4px;
+  }
+
+  .body {
+    height: calc(100vh - 167px);
+    padding: 16px 24px 0 24px;
+  }
+}
+
+.filter {
+  box-sizing: border-box;
+  width: 204px;
+  height: 32px;
+  padding: 4px, 19px, 4px, 19px;
+  border-radius: 8px;
+  border: 1px;
+  gap: 10px;
+  outline: none;
+  border: none;
+  font-size: 18px;
+  background: transparent;
+  border: 1px solid #bdbdbd;
+  transition: 0.4s;
+}
+.eliminated-title {
+  font-size: initial;
+  margin: 0px;
+  padding: 0 0 0 5px;
+}
+.title {
+  margin-right: auto;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+}
+
+.exclude {
+  display: none !important;
+}
+.filter-radio {
+  display: flex;
+  margin-bottom: 0px;
+}
+
+.radio-label {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.radio-label input[type="radio"] {
+  margin: 0 5px 0 0;
+}
+
+.radio-label {
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+  width: 20px;
+  height: 20px;
+}
+
+::ng-deep.radio-label input[type="radio"]:checked {
+  background-color: black;
+}

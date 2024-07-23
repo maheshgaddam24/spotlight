@@ -1,0 +1,93 @@
+<div class="data-journey-container d-flex flex-column">
+    <div class="data-details d-flex flex-column" *ngFor="let data of workFlowData;">
+        <div class="chart-header d-flex gap-3 justify-content-between" >
+            <div class="d-flex justify-content-center"> <mat-icon (click)="dataJourneyChange()">arrow_back</mat-icon>
+                <div class="report-name" [matTooltip]="data.job_name?.length > 20 ? data.job_name : null">{{ (data.job_name | uppercase) || "-" }}</div>
+            </div>
+            <div class="d-flex justify-content-center gap-2"><mat-slide-toggle  (change)="toggleAutoRefresh($event)" color="accent">Auto Refresh</mat-slide-toggle>
+                <span class="d-flex justify-content-center refresh-icon">
+                    <mat-icon aria-hidden="false" (click)="refreshData()" aria-label="Refresh">refresh</mat-icon>
+                </span>
+            </div>
+
+        </div>
+        <div class="run-time d-flex">
+            <div class="display-time">
+                Last run
+                <div class="last-run"> {{ data.last_run ? (data.last_run | timezoneDate:'medium':'UTC' ) : "-"
+                    }}</div>
+            </div>
+            <div class="display-time">
+                Next run
+                <div class="next-run"> {{ data.next_schedule_run ? (data.next_schedule_run |
+                    timezoneDate:'medium':'UTC' ) :
+                    "-" }}</div>
+            </div>
+            <div class="execution-summary d-flex flex-column">
+                <div class="d-flex gap-5">
+                    <div class="d-flex flex-column">
+                        <div class="action-text">Total runs</div>
+                        <div class="task-count">{{data.failure_count + data.success_count + data.skipped_count}}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="action-text">Success</div>
+                        <div class="task-count">{{data.success_count || '-'}}</div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="action-text">Skipped</div>
+                        <div class="task-count">{{data.skipped_count || '-'}}</div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="action-text">Failed </div>
+                        <div class="task-count failed-task">{{data.failure_count || '-'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cards-container" cdkDrag id="cards-container">
+            <div class="cards-column d-flex flex-column gap-2" *ngFor="let card of cards; let last = last">
+                <div class="cards d-flex">
+                    <div class="card d-flex"
+                        [class.active]="card.title === 'Refined Workflows' || card.title === 'Report Workflows'"
+                        [ngClass]="{'running': card.status === 'Running', 'queued': card.status === 'Queued'}">
+                        <div class="card-head d-flex justify-content-between">
+                            <div class="card-title">{{card.title}}</div>
+                            <div [class.succ-bg]="card.status == 'Success'"
+                                [class.running-bg]="card.status == 'Running'"
+                                [class.failed-bg]="card.status == 'Failed'" [class.queued-bg]="card.status == 'Queued'">
+                                {{ card.status }}
+                            </div>
+                        </div>
+                        <div class="card-body p-0 d-flex flex-column">
+                            <div class="card-desc">
+                                {{card.description}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <img [style.opacity]="(card.status === 'Running' || card.status === 'Queued') ? 0.5 : 1"
+                        class="arrow" *ngIf="!last" src="../../assets/images/arrow-icon.png" alt="">
+                </div>
+
+
+                <img class="arrow-down" *ngIf="card.scheduler" src="../../assets/images/arrow-down.png" alt="">
+                <div class="card" *ngIf="card.scheduler">
+                    <div class="card-head d-flex">
+                        <div class="card-icon"><img class="image" src={{card.scheduler.icon}} alt=""> </div>
+                        <div class="card-title">{{card.scheduler.title}}</div>
+                    </div>
+                    <div class="card-body p-0 d-flex flex-column">
+                        <div class="card-desc">
+                            {{card.scheduler.description}}
+                        </div>
+                        <div class="buttons d-flex justify-content-between">
+                            <div> <button class="config-button">{{card.scheduler.route}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

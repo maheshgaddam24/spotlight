@@ -1,0 +1,184 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class=" breadcrumb-container">
+      <nav>
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" [href]="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li *ngIf="workflowRoute" class="breadcrumb-element pointer" aria-current="page"> <a class="routeData"
+              (click)="routeWorkflows()">
+              {{ workflowTitle() }}</a></li>
+          <li class="breadcrumb-element" aria-current="page">{{rules_header}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="container-header d-flex flex-column px-4">
+      <div class="scheduler">{{rules_header}}</div>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center"><img class="info-icon" src="../../assets/images/info-green.svg"
+            alt="info">
+          <div class="header-description">Manage sequence of automated steps and actions of data transformation</div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3" *ngIf="isSearchEnable">
+          <!-- <button *ngIf="workflowData && workflowData.length > 0" class="newdata-btn d-flex dataSource align-items-center" type="button"
+            (click)="createNewWorkflow()">
+            <div class="datasource-text">{{ "ruleDataView.createNewRuleBtn" | translate }}</div>
+          </button> -->
+          <input class="filter" [(ngModel)]="searchText" placeholder="Filter by Rule Name" />
+        </div>
+      </div>
+    </div>
+
+    <div class="body d-flex">
+      <div *ngIf="loading" id="loading-bar-spinner" class="spinner">
+        <div class="spinner-icon"></div>
+      </div>
+      <div *ngIf="!loading" class="body-container">
+        <div *ngIf="!noRulesCreated" class="table-responsive">
+          <table class="table  text-center m-0">
+            <thead>
+              <tr>
+                <th class="toggle"></th>
+                <th>
+                  <div class="rule-name">
+                    {{ "ruleDataView.workflowName" | translate }}
+                  </div>
+                </th>
+                <th>
+                  <div>
+                    {{ "ruleDataView.sourceTable" | translate }}
+                  </div>
+                </th>
+                <th>
+                  <div class="description">
+                    {{ "ruleDataView.description" | translate }}
+                  </div>
+                </th>
+                <!-- <th>
+                  <div  class="description">
+                    Applied Rules
+                  </div>
+                </th> -->
+                <th>
+                  <div class="created-by">
+                    Checks Applied
+                  </div>
+                </th>
+                <th>
+                  <div class="created-at">
+                    Created At
+                  </div>
+                </th>
+                <th>
+                  <div>
+                    Sync Type
+                  </div>
+                </th>
+                <th>
+                  <div>
+                    Scheduled interval
+                  </div>
+                </th>
+                <th >
+                  <div>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of workflowData | filter : searchText; let i = index" id="{{data.job_name}}"
+                [class.highlighted]="data.job_name === highlightedColumn">
+                <td>
+                  <div class="active">
+                    <ng-toggle [(ngModel)]="data.is_active" [color]="data.is_active ? '#0d6efd' : '#939da2'"
+                      [switchColor]="data.is_active ? '' : 'crimson'" [width]="30" [height]="18"
+                      (change)="ruleActiveState(i, $event)" id="checkAllFacilities">
+                    </ng-toggle>
+                  </div>
+                </td>
+                <td class="rule">
+                  <div class="rule-name" [matTooltip]="data.job_name.length > 17 ? data.job_name : null">{{
+                    (data.job_name | uppercase) || '-' }}</div>
+                </td>
+                <td class="source">
+                  <div class="table-name" [matTooltip]="tables[i].join(',').length > 18 ? tables[i] : null">
+                    {{tables[i]}}
+                  </div>
+                </td>
+                <td>
+                  <div class="desc tooltip-enable-mandatory" data-toggle="tooltip" data-placement="top"
+                    title="{{ data.query_desc }}" data-original-title="{{ data.query_desc }}"
+                    title="{{ data.query_desc }}" data-placement="bottom" data-html="true"
+                    (click)=" data.query_desc ? openDialog( data.query_desc) :null">
+                    {{ data.query_desc ? (data.query_desc | uppercase) : '-' }}
+                  </div>
+                </td>
+                <!-- <td class="source">
+                  <div class="table-name"  [matTooltip]="checksAppliedData(data.checks_applied)" >
+                    {{checksAppliedData(data.checks_applied)}}
+                  </div>
+                </td> -->
+                <td class="rule" [matTooltip]="checkAppliedDataList(data.checks_applied) || null">
+                  <div class="rule-name">{{ checkAppliedDataList(data.checks_applied) || '-' }}</div>
+                </td>
+                
+                <td class="created-time">
+                  <div class="created-at"
+                    [matTooltip]="(data.created_at | date : 'medium').length > 23 ? (data.created_at | date : 'medium') : null">
+                    {{ data.created_at ? (data.created_at | timezoneDate:'medium':'UTC' ) : '-' }}
+                  </div>
+                </td>
+                <td class="sync">
+                  <div>
+                    {{ data.sync_type || '-' }}
+                  </div>
+                </td>
+                <td class="schedule">
+                  <div class="interval"
+                    [matTooltip]="data.schedule_time && data.schedule_time.length > 22 ? data.schedule_time : null">
+                    {{data.schedule_time || '-' }}
+                  </div>
+                </td>
+                <td class="actions d-flex">
+                  <div matTooltip="Data" matTooltipPosition="below"  (click)="viewData(data)">
+                    <i class="bi bi-eye" ></i>
+                  </div>
+
+                  <div class="move-right" (click)="editRule(data)">
+                     <img class="action-icon" matTooltip="Edit"
+                      matTooltipPosition="below" 
+                      src="../../assets/images/edit-icon.svg" alt="" data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="noRulesCreated" class="no-data d-flex align-items-center justify-content-center">
+          <div class="no-rules d-flex flex-column">
+            <img class="rule-icon" src="../../assets/images/empty state - no schedule.svg" alt="">
+            <div class="d-flex align-items-center">
+              <img class="info-icon" src="../../assets/images/info-green.svg" alt="">
+              <div class="no-rule">{{ "ruleDataView.noData" | translate }}</div>
+            </div>
+          </div>
+
+          <button (click)="createNewWorkflow()" class="add-rule" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ "ruleDataView.createNewRuleBtn" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

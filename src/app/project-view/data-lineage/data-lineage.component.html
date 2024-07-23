@@ -1,0 +1,227 @@
+<div class="body-container" *ngIf="!dataJourney">
+    <div *ngIf="!noWorkflows" class="auto-refresh">
+        <mat-slide-toggle color="accent" (change)="toggleAutoRefresh($event)">Auto Refresh</mat-slide-toggle>
+        <span class="refresh-icon" (click)="refreshData()">
+            <mat-icon aria-hidden="false" aria-label="Refresh">refresh</mat-icon>
+        </span>
+    </div>
+    <div *ngIf="noWorkflows" class="no-reports d-flex">
+        <div class="frame-49">
+            <div class="inline">
+                <svg class="disclosure" width="90" height="90" viewBox="0 0 90 90" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M41.292 16.875H68.3628C72.5165 16.875 74.5934 16.875 76.1799 17.6925C77.5755 18.4115 78.7101 19.5589 79.4211 20.9701C80.2295 22.5744 80.2295 24.6746 80.2295 28.875V33.75C80.2295 37.2446 80.2295 38.9918 79.6649 40.3701C78.9122 42.2078 77.4683 43.6679 75.6511 44.4291C74.2881 45 72.5602 45 69.1045 45M48.7087 73.125H21.6378C17.4841 73.125 15.4072 73.125 13.8207 72.3075C12.4252 71.5885 11.2906 70.4411 10.5795 69.0299C9.77116 67.4256 9.77116 65.3254 9.77116 61.125V56.25C9.77116 52.7554 9.77116 51.0082 10.3357 49.6299C11.0885 47.7922 12.5323 46.3321 14.3496 45.5709C15.7126 45 17.4404 45 20.8962 45M38.6962 54.375H51.3045C52.3429 54.375 52.8621 54.375 53.2588 54.1706C53.6076 53.9909 53.8913 53.704 54.0691 53.3512C54.2712 52.9501 54.2712 52.4251 54.2712 51.375V38.625C54.2712 37.5749 54.2712 37.0499 54.0691 36.6488C53.8913 36.296 53.6076 36.0091 53.2588 35.8294C52.8621 35.625 52.3429 35.625 51.3045 35.625H38.6962C37.6577 35.625 37.1385 35.625 36.7419 35.8294C36.393 36.0091 36.1093 36.296 35.9316 36.6488C35.7295 37.0499 35.7295 37.5749 35.7295 38.625V51.375C35.7295 52.4251 35.7295 52.9501 35.9316 53.3512C36.1093 53.704 36.393 53.9909 36.7419 54.1706C37.1385 54.375 37.6577 54.375 38.6962 54.375ZM66.5087 82.5H79.117C80.1554 82.5 80.6746 82.5 81.0713 82.2956C81.4201 82.1159 81.7038 81.829 81.8816 81.4762C82.0837 81.0751 82.0837 80.5501 82.0837 79.5V66.75C82.0837 65.6999 82.0837 65.1749 81.8816 64.7738C81.7038 64.421 81.4201 64.1341 81.0713 63.9544C80.6746 63.75 80.1554 63.75 79.117 63.75H66.5087C65.4702 63.75 64.951 63.75 64.5544 63.9544C64.2055 64.1341 63.9218 64.421 63.7441 64.7738C63.542 65.1749 63.542 65.6999 63.542 66.75V79.5C63.542 80.5501 63.542 81.0751 63.7441 81.4762C63.9218 81.829 64.2055 82.1159 64.5544 82.2956C64.951 82.5 65.4702 82.5 66.5087 82.5ZM10.8837 26.25H23.492C24.5304 26.25 25.0496 26.25 25.4463 26.0456C25.7952 25.8659 26.0788 25.579 26.2566 25.2262C26.4587 24.8251 26.4587 24.3001 26.4587 23.25V10.5C26.4587 9.4499 26.4587 8.92485 26.2566 8.52377C26.0788 8.17096 25.7952 7.88413 25.4463 7.70436C25.0496 7.5 24.5304 7.5 23.492 7.5H10.8837C9.84523 7.5 9.32601 7.5 8.92938 7.70436C8.5805 7.88413 8.29685 8.17096 8.11908 8.52377C7.91699 8.92485 7.91699 9.4499 7.91699 10.5V23.25C7.91699 24.3001 7.91699 24.8251 8.11908 25.2262C8.29685 25.579 8.5805 25.8659 8.92938 26.0456C9.32601 26.25 9.84523 26.25 10.8837 26.25Z"
+                        stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div class="inline2">
+                <svg class="disclosure2" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_2182_123476)">
+                        <path
+                            d="M10.0003 18.3332C14.6027 18.3332 18.3337 14.6022 18.3337 9.99984C18.3337 5.39746 14.6027 1.6665 10.0003 1.6665C5.39795 1.6665 1.66699 5.39746 1.66699 9.99984C1.66699 14.6022 5.39795 18.3332 10.0003 18.3332Z"
+                            stroke="#039855" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M10 13.3333V10" stroke="#039855" stroke-width="1.66667" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M10 6.6665H10.0083" stroke="#039855" stroke-width="1.66667" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_2182_123476">
+                            <rect width="20" height="20" fill="white" />
+                        </clipPath>
+                    </defs>
+                </svg>
+
+                <div class="title">No workflow generated</div>
+            </div>
+        </div>
+
+    </div>
+    <div *ngIf="!noWorkflows" class="data-container d-flex">
+
+        <div class="table-container">
+
+            <div class="table-responsive d-flex flex-column justify-content-between">
+                <table class="table text-center m-0" cellpadding="6" simplebar>
+                    <thead>
+                        <tr>
+                            <th>PROCESS NAME</th>
+                            <th>CREATED ON</th>
+                            <th>SCHEDULE</th>
+                            <th>OVERALL STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let data of pagedWorkflowData; let i = index">
+                            <tr [class.active-row]="data.job_name === workFlowName">
+                                <td class="workflow" (click)="getWorkFlowChartDataSet(data)">
+                                    <p class="workflow-name"
+                                        [matTooltip]="data.job_name.length > 25 ? data.job_name : null">{{
+                                        (data.job_name | uppercase) || "-" }}</p>
+                                </td>
+                                <td>{{ data.created_at ? (data.created_at | timezoneDate:'medium':'UTC' ) : "-" }}</td>
+                                <td class="schedule">
+                                    <div class="interval">{{ data.schedule_time || "-" }}</div>
+                                </td>
+                                <td>
+                                    <div [class.succ-bg]="data.status == 'Success'"
+                                        [class.running-bg]="data.status == 'Running...'"
+                                        [class.failed-bg]="data.status == 'Failed'">
+                                        {{ data.status }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+
+                <div *ngIf="!loading" class="pagination">
+                    <ul>
+                        <li class="page-item prev d-flex" [ngClass]="{'disabled': currentPage === 1}">
+                            <img class="arrow-left" src="../../assets/images/arrow-left.svg" alt="">
+                            <div (click)="setPage(currentPage - 1)" aria-label="Previous">
+                                PREV
+                            </div>
+                        </li>
+                        <li class="page-item pages-list d-flex" *ngFor="let page of pages"
+                            [ngClass]="{'active': currentPage === page}" (click)="setPage(page)">
+                            <div>{{ page }}</div>
+                        </li>
+                        <li class="page-item next d-flex" [ngClass]="{'disabled': currentPage === totalPages}">
+                            <div (click)="setPage(currentPage + 1)" aria-label="Next">
+                                NEXT
+                            </div>
+                            <img class="arrow-right" src="../../assets/images/arrow-right.svg" alt="">
+                        </li>
+                    </ul>
+                </div>
+
+                <div *ngIf="saveChanges" class="p-1">
+                    <button (click)="saveSkipDateChanges()" class="btn btn-dark d-flex saveBtn" type="button">
+                        Save changes
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="stats p-0">
+            <div class="graph d-flex flex-column" *ngFor="let data of workflowInsights;">
+                <div class="chart-header d-flex">
+                    <div class="skipDate" [matTooltip]="data.job_name?.length > 20 ? data.job_name : null">
+                        <div class="report-name">{{ (data.job_name | uppercase) || "-" }}</div>
+                    </div>
+                    <div matTooltipPosition="above" matTooltip="Sync Type" *ngIf="data.sync_type" class="syncType">
+                        <p class="p-0 m-0"> {{ syncType(data.sync_type) }}</p>
+                    </div>
+                </div>
+                <div class="run-time d-flex">
+                    <div class="display-time">
+                        Last run
+                        <div class="last-run"> {{ data.last_run ? (data.last_run | timezoneDate:'medium':'UTC' ) : "-"
+                            }}</div>
+                    </div>
+                    <div class="display-time">
+                        Next run
+                        <div class="next-run"> {{ data.next_schedule_run ? (data.next_schedule_run |
+                            timezoneDate:'medium':'UTC' ) :
+                            "-" }}</div>
+                    </div>
+                </div>
+                <div class="run-time d-flex">
+                    <div class="display-time">
+                        First run start
+                        <div class="first-run">{{ data.next_schedule_run ? (data.next_schedule_run |
+                            timezoneDate:'medium':'UTC' ) :
+                            "-" }}</div>
+                    </div>
+                    <div class="display-time">
+                        Last run start
+                        <div class="last-run-start"> {{ data.last_run ? (data.last_run | timezoneDate:'medium':'UTC' ) :
+                            "-" }}</div>
+                    </div>
+                </div>
+                <div class="execution-stages d-flex flex-column">
+                    <div class="d-flex gap-2">
+                        <img src="../../../assets/images/execution-stages.svg" alt="">
+                        Execution Stages
+                    </div>
+                    <div class="execution-options d-flex gap-3">
+                        <div class="d-flex gap-2 p-2" (click)="dataJourneyChange()">
+                            <img src="../../../assets/images/data-journey.svg" alt=""
+                                style="width: 15.6px;height: 22px">
+                            <div class="options-text">Data Journey</div>
+                        </div>
+                        <div class="d-flex gap-2 p-2" (click)="openGoldTableColumnsData(data.job_name)">
+                            <img src="../../../assets/images/gantt.svg" alt="" style="width: 18px;height: 22px">
+                            <div class="options-text">Report View</div>
+                        </div>
+                        <div class="d-flex gap-2 p-2 cursor" (click)="openDialog(data.query_desc)">
+                            <img src="../../../assets/images/code.svg" alt="" style="width: 18.3px;height: 22px">
+                            <div class="options-text">Query</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions-summary d-flex flex-column">
+                    <div class="d-flex gap-2">
+                        <img src="../../../assets/images/actions.svg" alt="">
+                        Actions Summary
+                    </div>
+                    <div class="action-options d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Loading time</div>
+                            <div class="d-flex gap-4">
+                                <div class="time-text">15:39 min</div>
+                                <img src="../../../assets/images/arrow-top.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Task tries</div>
+                            <div class="d-flex gap-4">
+                                <div class="time-text">20:11 min</div>
+                                <img src="../../../assets/images/arrow-top.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Task duration</div>
+                            <div class="d-flex gap-4">
+                                <div class="time-text">8:49 min</div>
+                                <img src="../../../assets/images/arrow-top.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="execution-summary d-flex flex-column">
+                    <div class="d-flex gap-2">
+                        <img src="../../../assets/images/execution-summary.svg" alt="">
+                        Execution Summary
+                    </div>
+                    <div class="d-flex gap-5">
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Total runs</div>
+                            <div class="task-count">{{data.failure_count + data.success_count + data.skipped_count}}
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Success</div>
+                            <div class="task-count">{{data.success_count || '-'}}</div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Skipped</div>
+                            <div class="task-count">{{data.skipped_count || '-'}}</div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="action-text">Failed </div>
+                            <div class="task-count failed-task">{{data.failure_count || '-'}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="dataJourney" >
+    <app-data-journey  [workFlowData]="workflowInsights" (childButtonClick)="tableButtonShowClick()"></app-data-journey>
+</div>

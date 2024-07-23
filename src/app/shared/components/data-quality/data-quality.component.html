@@ -1,0 +1,58 @@
+<div *ngIf="checkApplying==='Length Check'">
+    <h1 mat-dialog-title>Length Check on {{columnName}}</h1>
+    <div mat-dialog-content>
+        <mat-form-field>
+            <mat-label>Length check number</mat-label>
+            <input matInput [(ngModel)]="lengthInput">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="d-flex justify-content-end">
+        <button mat-raised-button (click)="closeDialog()">Cancel</button>
+        <button mat-raised-button (click)="closeDialogWithData()">Apply</button>
+    </div>
+</div>
+
+<div *ngIf="checkApplying==='Decimal Check'">
+    <h1 mat-dialog-title>Decimal Check on {{columnName}}</h1>
+    <div mat-dialog-content>
+        <mat-form-field>
+            <mat-label>Eg:-10,2</mat-label>
+            <input matInput [(ngModel)]="lengthInput">
+        </mat-form-field>
+        <div class="d-flex"><i class="fa fa-info-circle d-flex align-items-center" aria-hidden="true"></i>
+            <p style="margin: 0 0 0px 0px; padding: 0 0 0px 5px;">Precision,Scale</p>
+        </div>
+    </div>
+
+
+    <div mat-dialog-actions class="d-flex justify-content-end">
+        <button mat-raised-button (click)="closeDialog()">Cancel</button>
+        <button mat-raised-button (click)="closeDialogWithData()">Apply</button>
+    </div>
+</div>
+
+<div *ngIf="checkApplying==='Date Check'">
+    <h1 mat-dialog-title>Date Check on {{columnName}}</h1>
+    <div mat-dialog-content class="d-flex flex-column">
+        <div> <mat-form-field>
+                <mat-label>Date check format</mat-label>
+                <mat-select [(value)]="lengthInput" (selectionChange)="onSelectChange($event)">
+                    <mat-option disabled>Select</mat-option>
+                    <mat-option value="DD-Mon-YY">DD-Mon-YY</mat-option>
+                    <mat-option value="DD-MM-YYYY">DD-MM-YYYY</mat-option>
+                    <mat-option value="YYYY-MM-DD">YYYY-MM-DD</mat-option>
+                </mat-select>
+            </mat-form-field></div>
+        <di class="d-flex justify-content-center" style="padding: 0 0 17px 0;" >
+            <h5>---or---</h5>
+        </di>
+        <div><mat-form-field>
+                <input matInput placeholder="Custom Date Format" [(ngModel)]="customFormat" (input)="onInputChange()">
+            </mat-form-field></div>
+
+    </div>
+    <div mat-dialog-actions class="d-flex justify-content-end">
+        <button mat-raised-button (click)="closeDialog()">Cancel</button>
+        <button mat-raised-button (click)="closeDialogWithData()">Apply</button>
+    </div>
+</div>

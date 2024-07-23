@@ -1,0 +1,15 @@
+<div *ngIf="logsDataSafe">
+    <div class="header">
+        <h4>{{data.dataSetName}}</h4>
+    </div>
+    <div class="logs-content">
+        <pre [innerHTML]="logsDataSafe"></pre>
+    </div>
+    <div class="row">
+        <div class="holder" (click)="cancel()">
+            <div class="button-regular">
+                <div class="button">{{"Cancel" | translate}}</div>
+            </div>
+        </div>
+    </div>
+</div>

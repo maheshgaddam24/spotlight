@@ -1,0 +1,51 @@
+@import "../../../utilities/global.scss";
+
+// .modal .modal-dialog {
+//     width: 80%;
+// }
+
+
+%button_style {
+  width: 93px;
+  height: 40px;
+  padding: 0px 20px;
+  border-radius: 20px;
+  gap: 10px;
+  border: 1px solid #2683C6;
+}
+
+button {
+  margin-right: 8px;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: end;
+}
+
+.downloadCsv {
+  text-decoration: none;
+}
+
+.downloadPDF {
+  color: dodgerblue;
+}
+.buttons {
+  height: 40px;
+  gap: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clear-button {
+  @extend %button_style;
+  color: #2683c6;
+  background-color: #fff;
+  width: fit-content
+}
+
+.create-button {
+  @extend %button_style;
+  background-color: #2683c6;
+  color: #fff;
+  width: fit-content;
+}

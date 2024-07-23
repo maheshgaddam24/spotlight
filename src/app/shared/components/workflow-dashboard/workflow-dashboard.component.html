@@ -1,0 +1,217 @@
+<div class="container-fluid p-0">
+  <div class="line"></div>
+  <div>
+    <div class="breadcrumb-container ">
+      <nav>
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-element">
+            <a [href]="routeHome()">
+              <img class="home-icon" src="../../assets/images/home-icon-breadcrumb.svg" alt="home">
+            </a>
+          </li>
+          <li class="breadcrumb-element" aria-current="page"> <a class="routeData" [href]="routeDataPipelines()">
+              {{projectName | titlecase }}</a></li>
+          <li class="breadcrumb-element" aria-current="page">{{rules_header}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="container-header d-flex flex-column px-4">
+      <div class="scheduler">{{rules_header}}</div>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center"><img class="info-icon" src="../../assets/images/info-green.svg"
+            alt="info">
+          <div class="header-description">Schedule workflows as jobs and view execution history</div>
+        </div>
+
+        <button *ngIf="workflowData && workflowData.length > 0" class="newdata-btn d-flex dataSource" type="button"
+          (click)="createNewWorkflow()">
+          <div class="datasource-text">{{ "workflowDashboard.createNewWorkflowBtn" | translate }}</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="body d-flex">
+      <div *ngIf="loading" id="loading-bar" class="spinner">
+        <div class="spinner-icon"></div>
+      </div>
+
+      <div *ngIf="!loading" class="body-container">
+        <div class="data-container d-flex" *ngIf="workflowData.length > 0">
+          <div class="table-container">
+            <div class="table-responsive d-flex flex-column justify-content-between">
+              <table class="table text-center m-0" cellpadding="6" simplebar>
+                <thead>
+                  <tr>
+                    <th class="toggle"></th>
+                    <th>{{ "workflowDashboard.table.workflowName" | translate }}</th>
+                    <th>SCHEDULE INTERVAL</th>
+                    <th class="status">STATUS</th>
+                    <th>SKIP DATES</th>
+                    <th class="actions-header">
+                      ACTIONS
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let data of pagedWorkflowData; let i = index">
+                    <tr [class.active-row]="data.job_name === workFlowName">
+                      <td>
+                        <ng-toggle [(ngModel)]="data.is_active" [color]="data.is_active ? '#0d6efd' : '#939da2'"
+                          [switchColor]="data.is_active ? '' : 'crimson'" [width]="30" [height]="18"
+                          id="checkAllFacilities">
+                        </ng-toggle>
+                      </td>
+                      <td class="workflow" (click)="getWorkFlowChartDataSet(data)">
+                        <p class="workflow-name" [matTooltip]="data.job_name.length > 24 ? data.job_name : null">{{
+                          (data.job_name | uppercase) || "" }}</p>
+                      </td>
+                      <td class="schedule">
+                        <div class="interval">{{ data.schedule_time || "-" }}</div>
+                      </td>
+                      <td>
+                        <div [class.succ-bg]="data.status == 'Success'" [class.running-bg]="data.status == 'Running...'"
+                          [class.failed-bg]="data.status == 'Failed'">
+                          {{ data.status }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="skip-dates d-flex"  (click)="getSaveDates(i)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                          <mat-icon matIconSuffix ><img
+                              src="../../../../assets/images/calendar.svg" alt="cal">
+                          </mat-icon>
+                          <div
+                            [matTooltip]="convertToString(data.skip_schedule).length > 20 ? convertToString(data.skip_schedule) : null"
+                            class="skipped-dates">{{ convertToString(data.skip_schedule) }}</div>
+                        </div>
+                      </td>
+                      <td class="actions d-flex">
+                        <img class="action-icon" src="../../assets/images/edit-icon.svg" alt=""
+                          (click)="openTableSelectionModal(data)" matTooltip="Edit Scheduling"
+                          matTooltipPosition="below">
+                        <img class="action-icon" src="../../assets/images/load-icon.svg" alt="" matTooltip="Manual sync"
+                          matTooltipPosition="below" (click)="toggleSyncRotation(data)"
+                          [ngClass]="{ 'rotate': data.isSyncing }">
+                      </td>
+                      <td><i class="bi bi-eye" (click)="navigateToRulesDataView(data.job_name)" matTooltip="View"
+                          matTooltipPosition="below"></i></td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+
+              <div *ngIf="!loading" class="pagination">
+                <ul>
+                  <li class="page-item prev d-flex" [ngClass]="{'disabled': currentPage === 1}">
+                    <img class="arrow-left" src="../../assets/images/arrow-left.svg" alt="">
+                    <div (click)="setPage(currentPage - 1)" aria-label="Previous">
+                      PREV
+                    </div>
+                  </li>
+                  <li class="page-item pages-list d-flex" *ngFor="let page of pages"
+                    [ngClass]="{'active': currentPage === page}" (click)="setPage(page)">
+                    <div>{{ page }}</div>
+                  </li>
+                  <li class="page-item next d-flex" [ngClass]="{'disabled': currentPage === totalPages}">
+                    <div (click)="setPage(currentPage + 1)" aria-label="Next">
+                      NEXT
+                    </div>
+                    <img class="arrow-right" src="../../assets/images/arrow-right.svg" alt="">
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="stats p-0">
+            <!-- -->
+            <div class="graph d-flex flex-column">
+              <div class="chart-header">
+                <div class="skipDate" [matTooltip]="workFlowName?.length > 30 ? workFlowName : null">
+                  <div class="report-name"> {{ workFlowName }}</div>
+              </div>
+              </div>
+              <div class="run-time">
+                Last run
+                <div class="last-run">{{(lastRun | date:'MMM d, y, h:mm:ss a') || '-' || "-"}}</div>
+              </div>
+              <div class="run-time">
+                Next Scheduled
+                <div class="scheduled-run">{{(scheduledRun | date:'MMM d, y, h:mm:ss a') || '-'}}</div>
+              </div>
+              <div class="graph-status d-flex">
+                <div class="status-count">
+                  Success
+                  <div class="success-count">{{succesCount || "-"}}</div>
+                </div>
+                <div class="status-count">
+                  Failed
+                  <div class="failed-count">{{errorCount || "-"}}</div>
+                </div>
+                <div class="status-count">
+                  Skipped
+                  <div class="skipped-count">{{skipCount || "-" }}</div>
+                </div>
+              </div>
+
+              <div [hidden]="hideFetchingTablesText" id="loading-bar-spinner" class="graph-spinner">
+                <div class="spinner-icon"></div>
+              </div>
+
+              <div [hidden]="noData" class="noData">
+                <h4>{{ "workflowDashboard.noData" | translate }}</h4>
+              </div>
+            </div>
+            <div *ngIf="!chartLoading" echarts [loading]="chartLoading" [options]="chartOption" class="demo-chart"
+              [merge]="chartOption" [@fadeInOut]>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="workflowData.length == 0" class="no-data d-flex align-items-center justify-content-center">
+          <div class="no-schedules d-flex flex-column">
+            <img class="workflow-icon" src="../../assets/images/empty state - no schedule.svg" alt="">
+            <div class="d-flex align-items-center">
+              <img class="info-icon" src="../../assets/images/info-green.svg" alt="">
+              <div class="no-workflow">{{ "workflowDashboard.noData" | translate }}</div>
+            </div>
+          </div>
+
+          <button (click)="createNewWorkflow()" class="add-workflow" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ "workflowDashboard.createNewWorkflowBtn" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight"
+  aria-labelledby="offcanvasRightLabel">
+  <div class="close-canvas" (click)="closeOff()">
+    <div class="close">
+      <i class="bi bi-x close-button" data-bs-dismiss="offcanvas" aria-label="Close" #closeButton></i>
+    </div>
+  </div>
+  <div class="canvas-body" [matTooltip]="skipDateTableName?.length > 20 ? skipDateTableName : null">
+    <div class="skipDate">
+      <div  class="report-name">{{skipDateTableName}}</div>
+    </div>
+
+    <mat-calendar *ngIf="calender" #calendar (selectedChange)="select($event, calendar)" [dateClass]="isSelected"
+      [minDate]="minDate"></mat-calendar>
+  </div>
+  <div class="canvas-buttons">
+    <div class="buttons">
+      <div class="d-flex">
+        <button type="submit" class="create-button" (click)="saveSkipDateChanges()">
+          {{"saveButton" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

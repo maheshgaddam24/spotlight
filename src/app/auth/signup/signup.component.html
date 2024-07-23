@@ -1,0 +1,47 @@
+<div class="body d-flex justify-content-center align-items-center">
+  <div class="card">
+    <img src="../../../assets/images/logo.svg" alt="">
+    <form [formGroup]="signupForm" (ngSubmit)="signup()">
+      <div class="form-group">
+        <label>{{ "signup.username" | translate }}</label>
+        <input type="name" class="form-control" data-test="username" formControlName="username" id="inputName"
+          placeholder="Enter your username" required />
+      </div>
+      <div class="form-group" id="email-container">
+        <label>{{ "signup.email" | translate }}</label>
+        <input type="email" class="form-control " data-test="email" formControlName="email" id="inputEmail"
+          placeholder="Enter your email" required />
+      </div>
+      <div class="form-group inner-addon right-addon" id="password-container">
+        <label>{{ "signup.password" | translate }}<i class="fa fa-info-circle"  aria-hidden="true"  matTooltipPosition="right" matTooltip="Please enter a password that should contain at least one uppercase letter, one number, and one special character (!@#$%^&*()_-+=<>?/)." ></i></label>
+        <input type="password" [type]="showPasswordOnPress ? 'text' : 'password'" data-test="password"
+          class="form-control" placeholder="Enter your password" formControlName="password" [ngClass]="{'invalid-password': passwordInvalid,'red-ripple': passwordInvalid}" required />
+        <div (mousedown)="showPasswordOnPress = !showPasswordOnPress"
+          (mouseup)="showPasswordOnPress = !showPasswordOnPress">
+          <i alt="hide" class="fas fa-eye-slash eye-show" [class.hide]="showPasswordOnPress"></i>
+          <i alt="show" class="fas fa-eye eye-hide" [class.show]="!showPasswordOnPress"></i>
+        </div>
+      </div>
+      <div class="form-group inner-addon right-addon">
+        <label>{{ "signup.confirmPassword" | translate }}<i class="fa fa-info-circle"  aria-hidden="true"  matTooltipPosition="right" matTooltip="Confirm password should match the above password." ></i></label>
+        <input type="password" [type]="showPasswordOnPress ? 'text' : 'password'" class="form-control" [ngClass]="{'invalid-password': passwordMatch,'red-ripple': passwordMatch}"
+          data-test="confirmPassword" placeholder="Confirm your Password" formControlName="password2" required (keyup)="confirmPasswordValidator($event)"/>
+        <div (mousedown)="showPasswordOnPress = !showPasswordOnPress"
+          (mouseup)="showPasswordOnPress = !showPasswordOnPress">
+          <i alt="hide" class="fas fa-eye-slash eye-show" [class.hide]="showPasswordOnPress"></i>
+          <i alt="show" class="fas fa-eye eye-hide" [class.show]="!showPasswordOnPress"></i>
+        </div>
+      </div>
+      <div class="form-group signup-button" id="signup-btn-container">
+        <button type="submit" data-test="signup" class="btn" [disabled]="signupForm.invalid">
+          {{ "signup.signup-tag" | translate }}
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+      <div class="form-check d-flex">
+        <span>{{ "signup.existing-user" | translate }}</span>
+        <a [routerLink]="['/login']" data-test="login">{{ "signup.login" | translate }}</a>
+      </div>
+    </form>
+  </div>
+</div>

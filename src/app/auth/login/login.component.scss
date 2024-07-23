@@ -1,0 +1,149 @@
+@import "../../utilities/global.scss";
+
+.body {
+  background-image: url("../../../assets/images/background_image_logIn_signUp.png");
+  background-color: grey;
+  background-blend-mode: luminosity;
+  width: $full_width;
+  height: $full_height;
+  background-size: $background_size_cover;
+  background-repeat: $background_repeat;
+  background-position: $background_position;
+  background-attachment: $background_attachment;
+}
+
+.card {
+  display: $display_flex;
+  justify-content: $justify_content_center;
+  align-items: $align_items_center;
+  width: $card_width;
+  height: $card_height;
+  font-family: $roboto_font;
+  padding: 64px 32px;
+  gap: $px_20;
+}
+
+img {
+  width: 136px;
+  height: 70px;
+}
+
+form {
+  display: grid;
+  gap: $px_20;
+}
+
+label {
+  font-family: $varela_round;
+  font-weight: $font_weight_400;
+  font-size: $font_size_14;
+  line-height: 18px;
+  color: #4F4F4F;
+}
+
+.form-group {
+  width: 300px;
+  height: 80px;
+  display: grid;
+  gap: 8px;
+}
+
+.form-control {
+  width: $form_control_width;
+  height: $px_50;
+  background: $white;
+  border: 1px $border_solid #BDBDBD;
+  border-radius: 15px;
+  padding: $px_16;
+}
+
+::placeholder {
+  width: 260px;
+  height: 23px;
+  color: #C8C8C8;
+  font-family: $varela_round;
+  font-size: $px_16;
+  font-weight: $font_weight_400;
+  line-height: $px_20;
+}
+
+.form-check {
+  width: 300px;
+  height: $px_20;
+  gap: $px_10;
+  font-family: $varela_round;
+  font-size: 16px;
+  font-weight: $font_weight_400;
+  line-height: $px_20;
+}
+
+a {
+  text-decoration: none;
+}
+
+.fas {
+  top: 25px;
+}
+
+.btn {
+  width: 300px;
+  height: $px_50;
+  border-radius: $px_30;
+  padding: 6px 20px;
+  background-color: #2683C6;
+  color: #fff;
+  gap: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bi {
+  margin-top: 2px;
+}
+
+.login-button {
+  height: $px_50 !important;
+}
+
+.hide {
+  display: $display_none;
+}
+
+.inner-addon {
+  position: $position_relative;
+}
+
+.inner-addon {
+  .far,
+  .fas {
+    position: $position_absolute;
+    padding: $px_18;
+    z-index: 100;
+    cursor: $cursor_pointer;
+  }
+}
+
+.left-addon {
+
+  .far,
+  .fas {
+    left: 0px;
+  }
+}
+
+.right-addon {
+
+  .far,
+  .fas {
+    right: 0px;
+  }
+}
+
+.left-addon input {
+  padding-left: $px_30;
+}
+
+.right-addon input {
+  padding-right: $px_30;
+}

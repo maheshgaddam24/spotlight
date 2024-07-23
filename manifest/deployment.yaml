@@ -1,0 +1,23 @@
+apiVersion: apps/v1 # Kubernetes API version
+kind: Deployment  # Kubernetes resource kind we are creating
+metadata:
+  name: angular-deployment
+spec:
+  selector:
+    matchLabels:
+      app: angular
+  replicas: 1 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: angular
+    spec:
+      containers:
+      - name: angular
+        image: spotlightcr.azurecr.io/jithendra313/spotlight:608  #Image that will be used to containers in the cluster
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80 # The port that the container is running on in the cluster
+
+      imagePullSecrets:
+        - name: deploymentsecret
